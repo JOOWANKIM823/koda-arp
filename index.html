@@ -4,46 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KODA ARP 12기</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="스타일.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <section id="home-page" class="page active">
+    <div class="app-container">
         <header class="main-header">
-            <div class="logo">MU:E NOTE</div>
-            <div class="hero-text">
-                <p>MU:E NOTE COMPANY</p>
-                <h2>한국을 대표하는<br>글로벌 대학의 자부심</h2>
-            </div>
+            <div class="logo" onclick="showPage('main-page')">KODA-ARP</div>
+            <div class="menu-btn"><i class="fas fa-bars"></i></div>
         </header>
-        <div class="quick-menu-title">빠른메뉴 QUICK MENU</div>
-        <nav class="main-nav">
-            <div class="menu-item"><i>⭐</i>소개</div>
-            <div class="menu-item" onclick="showPage('list-page')"><i>📇</i>회원수첩</div>
-            <div class="menu-item"><i>📺</i>소식</div>
-            <div class="menu-item"><i>📝</i>자유게시판</div>
-        </nav>
-    </section>
 
-    <section id="list-page" class="page">
-        <header class="sub-header">
-            <button class="back-btn" onclick="showPage('home-page')">〈</button>
-            <h1>12기 원우수첩</h1>
-        </header>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="이름 또는 회사를 검색하세요">
+        <div id="main-page" class="page active">
+            <section class="main-visual">
+                <div class="visual-text">
+                    <p>한국부동산개발협회</p>
+                    <h1>창조도시부동산융합<br>최고위과정(ARP)</h1>
+                </div>
+            </section>
+            <nav class="grid-menu">
+                <div class="grid-item" onclick="showPage('member-page')">
+                    <i class="far fa-id-card"></i>
+                    <strong>원우회</strong>
+                    <span>MOBILE NOTE</span>
+                </div>
+                <div class="grid-item"><i class="far fa-images"></i><strong>사진첩</strong><span>ALBUM</span></div>
+                <div class="grid-item"><i class="far fa-calendar-alt"></i><strong>행사일정</strong><span>CALENDAR</span></div>
+                <div class="grid-item"><i class="fas fa-bullhorn"></i><strong>공지사항</strong><span>NOTICE</span></div>
+            </nav>
         </div>
-        <main class="member-grid" id="member-list"></main>
-    </section>
 
-    <section id="detail-page" class="page">
-        <header class="sub-header">
-            <button class="back-btn" onclick="showPage('list-page')">〈</button>
-            <h1>원우 상세정보</h1>
-        </header>
-        <div id="member-detail-content"></div>
-    </section>
+        <div id="member-page" class="page">
+            <div class="page-title">원우회 <span>12기 리스트</span></div>
+            <div class="search-section">
+                <input type="text" id="member-search" placeholder="성함 또는 소속 검색">
+            </div>
+            <div class="member-container">
+                <ul id="member-list-items" class="member-list"></ul>
+            </div>
+        </div>
 
-    <script src="script.js"></script>
+        <footer class="main-footer">
+            <div class="footer-info">
+                <strong>KODA-ARP 최고위과정</strong><br>
+                TEL: 02-512-4750 | FAX: 02-512-4752
+            </div>
+        </footer>
+    </div>
+
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header-box">
+                <span class="modal-title">원우 상세정보</span>
+                <i class="fas fa-times" onclick="closeModal()"></i>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="스크립트.js"></script>
 </body>
 </html>
