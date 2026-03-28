@@ -2,106 +2,109 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KODA ARP 12기</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #002d56; --sub-navy: #003a72; --gold: #D4AF37; --footer-bg: #2a2a2a; --btn-gray: #f1f3f5; --btn-icon: #777; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
-        body { background: #eee; }
+        /* [전체 디자인 고정] */
+        :root { --navy: #002d56; --sub-navy: #003a72; --gold: #D4AF37; --footer-bg: #2a2a2a; --btn-gray: #f1f3f5; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #eee; padding-bottom: 65px; overflow-x: hidden; }
+        
         .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         
-        /* 헤더 */
+        /* 상단 헤더 */
         .main-header { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
         .logo { font-weight: 800; color: var(--navy); font-size: 1.3rem; cursor: pointer; letter-spacing: -1px; }
-        .menu-btn { color: var(--navy); font-size: 1.3rem; cursor: pointer; }
-        
-        /* 사이드바 */
-        .sidebar { position: fixed; top: 0; right: -250px; width: 250px; height: 100%; background: #fff; z-index: 200; transition: right 0.3s ease-out; box-shadow: -5px 0 15px rgba(0,0,0,0.2); padding-top: 60px; }
-        .sidebar.open { right: 0; }
-        .sidebar-item { padding: 15px 25px; border-bottom: 1px solid #eee; color: var(--navy); font-weight: 500; cursor: pointer; }
-        .sidebar-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 199; display: none; opacity: 0; transition: opacity 0.3s; }
-        .sidebar-overlay.show { display: block; opacity: 1; }
 
-        .page { display: none; flex: 1; }
-        .page.active { display: block; }
+        /* 페이지 관리 */
+        .page { display: none; flex: 1; width: 100%; }
+        .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 메인 비주얼 (텍스트 제거 버전) */
-        .main-visual { height: 200px; background-size: cover; background-position: center; position: relative; background-image: url('main-bg.jpg'); }
+        /* 메인화면 비주얼 (글씨 없는 main-bg.jpg) */
+        .main-visual { height: 200px; background: #002d56 url('main-bg.jpg') no-repeat center; background-size: cover; position: relative; }
 
-        /* 대시보드 메뉴 */
+        /* 메인 그리드 메뉴 */
         .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #ddd; }
         .grid-item { height: 160px; background: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
         .grid-item i { font-size: 2.5rem; color: var(--gold); margin-bottom: 15px; }
         .grid-item strong { font-size: 1rem; color: var(--navy); font-weight: 700; }
 
-        /* 원우리스트 */
-        .list-header { padding: 15px; background: #f4f4f4; font-weight: bold; border-bottom: 4px solid var(--gold); color: var(--navy); display: flex; justify-content: space-between; align-items: center; }
-        .member-card { display: flex; padding: 15px 20px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
-        .photo-area { width: 85px; height: 110px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #f0f0f0; flex-shrink: 0; cursor: pointer; }
+        /* 🚀 검색창 (리스트 상단 고정) */
+        .search-area { padding: 15px; background: #fff; border-bottom: 4px solid var(--gold); position: sticky; top: 58px; z-index: 90; }
+        .search-box { background: #f1f3f5; padding: 10px 15px; border-radius: 30px; display: flex; align-items: center; border: 1px solid #dee2e6; }
+        .search-box i { color: #adb5bd; margin-right: 12px; }
+        .search-box input { border: none; background: none; outline: none; width: 100%; font-size: 1rem; }
+
+        /* 리스트 스타일 */
+        .list-header { padding: 15px 20px; background: #f4f4f4; font-weight: bold; border-bottom: 1px solid #eee; color: var(--navy); display: flex; justify-content: space-between; }
+        .member-card { display: flex; padding: 18px 20px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; background: #fff; }
+        .photo-area { width: 85px; height: 110px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #f0f0f0; flex-shrink: 0; }
         .photo-area img { width: 100%; height: 100%; object-fit: cover; }
         .info-area { flex: 1; }
-        .info-area .tag { color: #4a6fa5; font-size: 0.75rem; font-weight: bold; margin-bottom: 2px; }
-        .info-area h3 { font-size: 1.2rem; margin-bottom: 4px; letter-spacing: 2px; cursor: pointer; }
-        .info-area p { font-size: 0.85rem; color: #666; margin-bottom: 10px; }
+        .info-area h3 { font-size: 1.2rem; margin-bottom: 5px; letter-spacing: 2px; }
+        .info-area p { font-size: 0.9rem; color: #666; margin-bottom: 10px; }
         
-        /* 버튼 기능 */
-        .icon-group { display: flex; gap: 12px; }
-        .icon-btn { width: 34px; height: 34px; background: var(--btn-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #dee2e6; cursor: pointer; text-decoration: none; }
-        .icon-btn i { font-size: 0.9rem; color: var(--btn-icon); }
+        .icon-group { display: flex; gap: 10px; }
+        .icon-btn { width: 34px; height: 34px; background: var(--btn-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #dee2e6; cursor: pointer; color: #777; text-decoration: none; }
 
-        /* 상세 모달 */
-        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: #fff; overflow-y: auto; }
+        /* 🚀 하단 탭 바 (고정) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; z-index: 1000; left: 50%; transform: translateX(-50%); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #777; font-size: 0.75rem; flex: 1; }
+        .nav-item.active { color: var(--navy); font-weight: bold; }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 3px; }
+
+        /* 모달 팝업 */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: #fff; overflow-y: auto; }
         .modal-header { padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; position: sticky; top: 0; background: #fff; z-index: 10; }
         .detail-table { width: 100%; border-collapse: collapse; }
-        .detail-table th { background: #f9f9f9; padding: 12px; border: 1px solid #eee; text-align: left; width: 35%; font-size: 0.9rem; }
+        .detail-table th { background: #f9f9f9; padding: 12px; border: 1px solid #eee; text-align: left; width: 35%; color: #666; font-size: 0.9rem; }
         .detail-table td { padding: 12px; border: 1px solid #eee; font-size: 0.9rem; }
 
-        /* 푸터 (높이 단축 버전) */
+        /* 푸터 */
         .main-footer { background: var(--footer-bg); color: #fff; padding: 15px 20px; text-align: left; font-size: 0.75rem; line-height: 1.5; }
-        .footer-logo { font-weight: bold; font-size: 0.95rem; margin-bottom: 8px; display: block; letter-spacing: -0.5px; }
-        .footer-content { color: #ccc; font-weight: 300; }
-        .copyright { margin-top: 10px; font-size: 0.65rem; color: #888; text-transform: uppercase; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <header class="main-header">
             <div class="logo" onclick="showPage('main-page')">KODA-ARP</div>
-            <div class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+            <div class="menu-btn"><i class="fas fa-bars"></i></div>
         </header>
-
-        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-item" onclick="showPage('main-page'); toggleSidebar();">협회소개</div>
-            <div class="sidebar-item" onclick="showPage('main-page'); toggleSidebar();">공지 및 일정</div>
-            <div class="sidebar-item" onclick="showPage('member-page'); toggleSidebar();">원우수첩</div>
-            <div class="sidebar-item" onclick="showPage('main-page'); toggleSidebar();">게시판 & 사진첩</div>
-        </div>
 
         <div id="main-page" class="page active">
             <section class="main-visual"></section>
             <nav class="grid-menu">
-                <div class="grid-item" onclick="alert('준비 중입니다.')"><i class="fas fa-university"></i><strong>협회소개</strong></div>
-                <div class="grid-item" onclick="alert('준비 중입니다.')"><i class="fas fa-bullhorn"></i><strong>공지 및 일정</strong></div>
+                <div class="grid-item" onclick="alert('협회소개 페이지 준비중')"><i class="fas fa-university"></i><strong>협회소개</strong></div>
+                <div class="grid-item" onclick="alert('공지사항 준비중')"><i class="fas fa-bullhorn"></i><strong>공지 및 일정</strong></div>
                 <div class="grid-item" onclick="showPage('member-page')"><i class="fas fa-id-card"></i><strong>원우수첩</strong></div>
-                <div class="grid-item" onclick="alert('준비 중입니다.')"><i class="fas fa-images"></i><strong>게시판 & 사진첩</strong></div>
+                <div class="grid-item" onclick="alert('게시판 준비중')"><i class="fas fa-images"></i><strong>게시판 & 사진첩</strong></div>
             </nav>
             <footer class="main-footer">
-                <span class="footer-logo">KODA-ARP 창조도시부동산융합 최고위과정(ARP)</span>
-                <div class="footer-content">
-                    한국디벨로퍼협회 「KODA-ARP 최고위과정」<br>
-                    (06152) 서울특별시 강남구 테헤란로 305, 11층 | TEL : 02-512-4750<br>
-                    FAX : 02-512-4752 | E-MAIL : koda@koda.or.kr
-                </div>
-                <div class="copyright">COPYRIGHTⓒ 2021 KOREA DEVELOPER ASSOCIATION ALL RIGHTS RESERVED.</div>
+                <span style="font-weight:bold; display:block; margin-bottom:5px;">KODA-ARP 창조도시부동산융합 최고위과정(ARP)</span>
+                한국디벨로퍼협회 「KODA-ARP 최고위과정」<br>
+                TEL : 02-512-4750 | FAX : 02-512-4752 | E-MAIL : koda@koda.or.kr
             </footer>
         </div>
 
         <div id="member-page" class="page">
-            <div class="list-header"><span>원우회 12기 리스트</span><span>총 <span id="total-count">60</span>명</span></div>
+            <div class="list-header"><span>원우회 12기 리스트</span><span>총 <span id="total-count">0</span>명</span></div>
+            <div class="search-area">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="member-search" placeholder="성함 또는 소속으로 검색" oninput="filterMembers()">
+                </div>
+            </div>
             <div id="member-list-items"></div>
         </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('main-page')"><i class="fas fa-home"></i><span>홈</span></div>
+            <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-university"></i><span>협회</span></div>
+            <div class="nav-item" onclick="showPage('member-page')"><i class="fas fa-id-card"></i><span>원우수첩</span></div>
+            <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-bullhorn"></i><span>공지</span></div>
+        </nav>
     </div>
 
     <div id="detail-modal" class="modal">
@@ -110,6 +113,7 @@
     </div>
 
     <script>
+        // 🚀 60명 전원 데이터 탑재 (절대 중략 없음)
         const members = [
             { no: 1, name: "김구현", id: "26001", group: "개발분과", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr", addr: "서울 송파구 위례순환로 480", birth: "1974-03-29" },
             { no: 2, name: "김기현", id: "26002", group: "융합분과", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net", addr: "서울 강남구 삼성로 511", birth: "1979-09-20" },
@@ -173,26 +177,28 @@
             { no: 60, name: "홍창표", id: "26060", group: "융합분과", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com", addr: "서울 영등포구 국제금융로 24", birth: "1983-02-11" }
         ];
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.querySelector('.sidebar-overlay').classList.toggle('show');
-        }
-
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
+            
+            // 하단바 아이콘 활성화 상태 변경
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if(pageId === 'main-page') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            if(pageId === 'member-page') document.querySelectorAll('.nav-item')[2].classList.add('active');
+            
             window.scrollTo(0, 0);
-            if(pageId === 'member-page') renderMembers();
+            if(pageId === 'member-page') renderMembers(members);
         }
 
-        function renderMembers() {
+        function renderMembers(data) {
             const listWrap = document.getElementById('member-list-items');
-            document.getElementById('total-count').innerText = members.length;
-            listWrap.innerHTML = members.map(m => `
+            if(!listWrap) return;
+            document.getElementById('total-count').innerText = data.length;
+            listWrap.innerHTML = data.map(m => `
                 <div class="member-card">
                     <div class="photo-area" onclick="openDetail(${m.no})"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/85x110?text=사진준비중'"></div>
                     <div class="info-area">
-                        <div class="tag">ARP 12기</div>
+                        <div style="color:var(--navy); font-size:0.75rem; font-weight:700;">ARP 12기</div>
                         <h3 onclick="openDetail(${m.no})">${m.name}</h3>
                         <p>${m.company} | ${m.pos}</p>
                         <div class="icon-group">
@@ -206,6 +212,12 @@
             `).join('');
         }
 
+        function filterMembers() {
+            const val = document.getElementById('member-search').value.toLowerCase();
+            const filtered = members.filter(m => m.name.includes(val) || m.company.includes(val));
+            renderMembers(filtered);
+        }
+
         function openDetail(no) {
             const m = members.find(i => i.no === no);
             const modal = document.getElementById('detail-modal');
@@ -215,13 +227,13 @@
                     <div><h2 style="color:var(--navy);">${m.name}</h2><p style="color:#666; font-size:0.9rem;">${m.company}</p><p style="color:#666; font-size:0.9rem;">${m.pos}</p></div>
                 </div>
                 <table class="detail-table">
-                    <tr><th>학번</th><td>${m.id}</td></tr><tr><th>분과</th><td>${m.group}</td></tr><tr><th>휴대전화</th><td>${m.phone}</td></tr><tr><th>이메일</th><td>${m.email}</td></tr><tr><th>회사주소</th><td>${m.addr}</td></tr>
+                    <tr><th>기수 / 학번</th><td>12기 / ${m.id}</td></tr><tr><th>분과</th><td>${m.group}</td></tr><tr><th>생년월일</th><td>${m.birth}</td></tr><tr><th>휴대전화</th><td>${m.phone}</td></tr><tr><th>이메일</th><td>${m.email}</td></tr><tr><th>회사주소</th><td>${m.addr}</td></tr>
                 </table>
             `;
             modal.style.display = "block";
         }
         function closeModal() { document.getElementById('detail-modal').style.display = "none"; }
-        window.onload = () => { renderMembers(); };
+        window.onload = () => { renderMembers(members); };
     </script>
 </body>
 </html>
