@@ -15,8 +15,9 @@
         :root { --navy: #002d56; --sub-navy: #1a3a5a; --gold: #D4AF37; --bg: #f5f5f5; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); padding-bottom: 75px; overflow-x: hidden; }
-        .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; }
+        .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         
+        /* 헤더 */
         .header { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
         .logo { font-weight: 800; color: var(--navy); font-size: 1.2rem; cursor: pointer; }
 
@@ -24,43 +25,33 @@
         .page.active { display: block; animation: fadeIn 0.2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .visual { height: 140px; background: var(--navy) url('main-bg.jpg') no-repeat center; background-size: cover; }
-
-        /* 검색 배너 */
-        .search-banner { margin: 15px; background: #bdc3c7; border-radius: 20px; height: 130px; position: relative; cursor: pointer; padding: 20px; overflow: hidden; }
-        .search-banner::after { content: "\f500 \f508"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); font-size: 4rem; color: rgba(255,255,255,0.3); letter-spacing: 15px; }
-        .click-badge { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; animation: pulse 2s infinite; border: 2px solid rgba(255,255,255,0.2); z-index: 10; pointer-events: none; }
-        @keyframes pulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
-
         /* 정사각형 격자 달력 */
-        .cal-box { margin: 0 15px 15px; background: var(--sub-navy); border-radius: 15px; padding: 15px 5px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .cal-box { margin: 15px; background: var(--sub-navy); border-radius: 15px; padding: 15px 5px; color: #fff; }
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--gold); padding: 0 10px; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; border-top: 1px solid rgba(255,255,255,0.1); border-left: 1px solid rgba(255,255,255,0.1); }
-        .cal-grid div { height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; position: relative; border-right: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .cal-grid .day-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); height: 35px; border: none; background: rgba(0,0,0,0.1); }
-        .cal-grid .has-event::after { content: ""; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 8px; }
+        .cal-grid div { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; border-right: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; }
+        .cal-grid .monday { color: var(--gold); font-weight: bold; }
+        .cal-grid .has-event::after { content: ""; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); }
 
-        /* 게시판 UI */
-        .board-header { padding: 15px; background: var(--navy); color: #fff; display: flex; justify-content: space-between; align-items: center; }
-        .write-btn { padding: 6px 12px; background: var(--gold); color: #fff; border-radius: 5px; font-size: 0.85rem; font-weight: bold; cursor: pointer; }
+        /* 게시판 카드 */
         .post-card { background: #fff; border-bottom: 1px solid #eee; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         
-        /* 글쓰기 페이지 */
-        .write-container { padding: 20px; }
-        .input-text { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; }
-        .file-input-box { background: #f8f9fa; padding: 15px; border: 1px dashed #ccc; border-radius: 8px; text-align: center; cursor: pointer; margin-bottom: 15px; }
-
         /* 하단바 */
         .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; height: 65px; border-top: 1px solid #ddd; z-index: 1000; left: 50%; transform: translateX(-50%); }
         .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888; font-size: 0.65rem; cursor: pointer; }
         .nav-tab.active { color: var(--navy); font-weight: bold; }
         .nav-tab i { font-size: 1.3rem; margin-bottom: 3px; }
 
-        /* 모달 팝업 */
+        /* 원우 명단 카드 */
+        .m-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
+        .m-photo { width: 70px; height: 90px; background: #eee; border-radius: 4px; overflow: hidden; }
+        .m-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .m-btns { display: flex; gap: 10px; margin-top: 8px; }
+        .m-btn { width: 32px; height: 32px; background: #f1f3f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #666; text-decoration: none; }
+
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
         .modal-body { position: absolute; bottom: 0; width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; left: 50%; transform: translateX(-50%); }
-        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-action { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+        .download-btn { display: block; width: 100%; padding: 12px; background: #e1f5fe; color: #0277bd; text-align: center; border-radius: 10px; text-decoration: none; font-weight: bold; margin-top: 15px; border: 1px solid #b3e5fc; }
     </style>
 </head>
 <body>
@@ -71,11 +62,7 @@
         </header>
 
         <div id="main-page" class="page active">
-            <div class="visual"></div>
-            <div class="search-banner" onclick="showPage('member-page')">
-                <h2 style="color:var(--navy);">ARP 원우 리스트 검색</h2>
-                <div class="click-badge">Click</div>
-            </div>
+            <div class="visual" style="height:140px; background:var(--navy) url('main-bg.jpg') no-repeat center; background-size:cover;"></div>
             <div class="cal-box">
                 <div class="cal-nav">
                     <i class="fas fa-chevron-left" onclick="changeMonth(-1)"></i>
@@ -91,14 +78,14 @@
                 <div style="height:110px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;" onclick="showPage('board-page', '사진첩')"><i class="fas fa-camera" style="font-size:1.8rem; color:var(--gold); margin-bottom:8px;"></i><strong>사진첩</strong></div>
             </nav>
             <footer style="padding:25px; background:var(--navy); color:#fff; font-size:0.7rem; line-height:1.6; text-align:center;">
-                KODA-ARP 최고위과정 12기 | TEL: 02-512-4750
+                KODA-ARP 창조도시부동산융합 최고위과정<br>TEL : 02-512-4750 | E-MAIL : koda@koda.or.kr
             </footer>
         </div>
 
         <div id="board-page" class="page">
-            <div class="board-header">
+            <div style="padding:15px; background:var(--navy); color:#fff; display:flex; justify-content:space-between; align-items:center;">
                 <span id="board-title">게시판</span>
-                <div class="write-btn" onclick="openWrite()">글쓰기</div>
+                <div onclick="openWrite()" style="font-size:0.8rem; background:var(--gold); padding:4px 10px; border-radius:4px; cursor:pointer;">글쓰기</div>
             </div>
             <div id="board-list-content"></div>
         </div>
@@ -115,17 +102,16 @@
         </div>
 
         <div id="write-page" class="page">
-            <div class="board-header">
-                <span id="write-title">글쓰기</span>
-                <div class="write-btn" onclick="savePost()">저장</div>
+            <div style="padding:15px; background:var(--navy); color:#fff; display:flex; justify-content:space-between; align-items:center;">
+                <span>자료 등록</span>
+                <div onclick="savePost()" style="font-size:0.8rem; background:var(--gold); padding:4px 10px; border-radius:4px; cursor:pointer;">저장</div>
             </div>
-            <div class="write-container">
-                <input type="hidden" id="edit-id">
-                <input type="text" id="post-subject" class="input-text" placeholder="제목을 입력하세요.">
-                <textarea id="post-content" class="input-text" style="height:200px; resize:none;" placeholder="내용을 입력하세요."></textarea>
-                <div class="file-input-box" onclick="document.getElementById('file-input').click()">
-                    <i class="fas fa-paperclip"></i> <span id="file-name-status">파일 첨부 (학습자료/사진)</span>
-                    <input type="file" id="file-input" style="display:none;" onchange="handleFileChange(this)">
+            <div style="padding:20px;">
+                <input type="text" id="post-subject" placeholder="제목 (예: 1주차 강의자료)" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
+                <textarea id="post-content" placeholder="내용을 입력하세요." style="width:100%; height:150px; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px; resize:none;"></textarea>
+                <div style="background:#f8f9fa; padding:15px; border-radius:8px; border:1px dashed #ccc; text-align:center; color:#666;">
+                    <i class="fas fa-file-pdf"></i> 깃허브 files 폴더의 <strong>정확한 파일명</strong> 입력<br>
+                    <input type="text" id="file-name-input" placeholder="예: 1주차 강의자료.pdf" style="width:100%; padding:10px; margin-top:10px; border:1px solid #ddd; border-radius:5px;">
                 </div>
             </div>
         </div>
@@ -142,39 +128,33 @@
     <div id="detail-modal" class="modal" onclick="this.style.display='none'">
         <div class="modal-body" onclick="event.stopPropagation()">
             <h2 id="modal-view-title" style="color:var(--navy); font-size:1.1rem;"></h2>
-            <div id="modal-view-content" style="margin-top:15px; line-height:1.6; white-space:pre-wrap; background:#f8f9fa; padding:15px; border-radius:10px; border-left:5px solid var(--gold);"></div>
-            <div id="modal-file-info" style="margin-top:10px; padding:10px; background:#e1f5fe; border-radius:5px; font-size:0.85rem; display:none;"></div>
-            <div class="btn-group">
-                <button class="btn-action" style="background:#eee;" onclick="editPost()">수정</button>
-                <button class="btn-action" style="background:#ff8a80; color:#fff;" onclick="deletePost()">삭제</button>
-                <button class="btn-action" style="background:var(--navy); color:#fff;" onclick="document.getElementById('detail-modal').style.display='none'">닫기</button>
+            <div id="modal-view-content" style="margin-top:15px; white-space:pre-wrap; padding:15px; background:#f8f9fa; border-radius:10px;"></div>
+            
+            <a id="real-download-link" href="#" class="download-btn" target="_blank" style="display:none;">
+                <i class="fas fa-file-pdf"></i> PDF 강의자료 다운로드
+            </a>
+
+            <div style="display:flex; gap:10px; margin-top:15px;">
+                <button onclick="deletePost()" style="flex:1; padding:12px; background:#ff8a80; border:none; border-radius:8px; color:#fff;">삭제</button>
+                <button onclick="document.getElementById('detail-modal').style.display='none'" style="flex:1; padding:12px; background:var(--navy); border:none; border-radius:8px; color:#fff;">닫기</button>
             </div>
         </div>
     </div>
 
     <script>
+        const GITHUB_USER = "JOOWANKIM823"; 
+        const GITHUB_REPO = "koda-arp"; 
+        
         let currentYear = 2026; let currentMonth = 3;
         let currentBoard = '공지사항';
-        let attachedFile = "";
-        let selectedPostId = null;
+        let selectedId = null;
 
-        // 🚀 커리큘럼 데이터 (공지사항 고정 연동 데이터)
-        const curriculumData = {
+        const curriculum = {
             "2026-03-16": { title: "1주차 강의", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
             "2026-03-23": { title: "2주차 강의", c1: "부동산트랜드와 주택 정책", l1: "진희선 교수", c2: "1학기 개강파티", l2: "원우회 주관" },
-            "2026-03-30": { title: "3주차 강의", c1: "부동산 프로젝트 리츠 사업", l1: "김승범 과장", c2: "제4차 산업혁명과 제4의 물결", l2: "이금룡 이사장" },
-            "2026-04-06": { title: "4주차 강의", c1: "특강: 디벨로퍼의 상상력", l1: "문주현 회장", c2: "-", l2: "-" },
-            "2026-04-13": { title: "5주차 강의", c1: "인구와 부, 인구학", l1: "고우림 교수", c2: "부동산 PF시장 현황과 정부정책", l2: "이병훈 부회장" },
-            "2026-04-20": { title: "6주차 강의", c1: "바람직한 공공개발의 역할", l1: "김세용 교수", c2: "좋은 도시를 위한 법", l2: "김지엽 교수" },
-            "2026-04-27": { title: "7주차 강의", c1: "부동산개발시장 변화와 비전", l1: "이현석 교수", c2: "변곡점에 선 세계경제질서", l2: "최재영 원장" },
-            "2026-05-11": { title: "8주차 강의", c1: "부동산 개발사례 트렌드", l1: "손종구 대표", c2: "주거복합 상업시설 설계 방향", l2: "주상선 대표" },
-            "2026-05-18": { title: "9주차 강의", c1: "서울시 공간구조 미래", l1: "구자훈 교수", c2: "-", l2: "-" },
-            "2026-06-01": { title: "10주차 강의", c1: "상업용 부동산 10가지 트렌드", l1: "김성순 부대표", c2: "건축을 통한 창의적 사고", l2: "양진석 대표" },
-            "2026-06-08": { title: "11주차 강의", c1: "2026 플랫폼 도시", l1: "김경민 교수", c2: "바람직한 부동산 정책 방향", l2: "진현환 前 차관" },
-            "2026-06-15": { title: "12주차 강의", c1: "신탁금융 활용 부동산투자개발", l1: "신찬혁 사장", c2: "부동산 금융시장과 투자운영 사례", l2: "김연수 대표" }
+            "2026-03-30": { title: "3주차 강의", c1: "부동산 프로젝트 리츠 사업", l1: "김승범 과장", c2: "제4차 산업혁명과 제4의 물결", l2: "이금룡 이사장" }
         };
 
-        // 🚀 원우 60명 전원 데이터
         const members = [
             { no: 1, name: "김구현", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr" },
             { no: 2, name: "김기현", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net" },
@@ -238,119 +218,70 @@
             { no: 60, name: "홍창표", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com" }
         ];
 
-        // 🚀 로컬 데이터베이스 연동
         function getDB() { return JSON.parse(localStorage.getItem('arp_db') || '[]'); }
         function saveDB(db) { localStorage.setItem('arp_db', JSON.stringify(db)); }
-
-        function handleFileChange(input) {
-            if(input.files[0]) {
-                attachedFile = input.files[0].name;
-                document.getElementById('file-name-status').innerText = "📎 첨부됨: " + attachedFile;
-            }
-        }
-
-        function openWrite() {
-            document.getElementById('edit-id').value = "";
-            document.getElementById('post-subject').value = "";
-            document.getElementById('post-content').value = "";
-            document.getElementById('file-name-status').innerText = "파일 첨부 (학습자료/사진)";
-            attachedFile = "";
-            showPage('write-page');
-        }
 
         function savePost() {
             const sub = document.getElementById('post-subject').value;
             const con = document.getElementById('post-content').value;
-            const editId = document.getElementById('edit-id').value;
-            if(!sub || !con) return alert('내용을 채워주세요!');
-
+            const fname = document.getElementById('file-name-input').value;
+            if(!sub) return alert('제목을 입력하세요!');
             let db = getDB();
-            if(editId) {
-                const idx = db.findIndex(i => i.id == editId);
-                db[idx].subject = sub;
-                db[idx].content = con;
-                if(attachedFile) db[idx].fileName = attachedFile;
-            } else {
-                db.unshift({ id: Date.now(), board: currentBoard, subject: sub, content: con, fileName: attachedFile, date: new Date().toLocaleDateString() });
-            }
-            saveDB(db); alert('저장 완료!'); showPage('board-page', currentBoard);
+            db.unshift({ id: Date.now(), board: currentBoard, subject: sub, content: con, fileName: fname, date: new Date().toLocaleDateString() });
+            saveDB(db); alert('저장되었습니다!'); showPage('board-page', currentBoard);
         }
 
         function drawBoard() {
             const list = document.getElementById('board-list-content');
-            // 공지사항은 커리큘럼 데이터와 로컬 게시글을 합쳐서 보여줌
-            let posts = getDB().filter(p => p.board === currentBoard);
             let html = "";
-            
             if(currentBoard === '공지사항') {
-                html += Object.keys(curriculumData).map(date => `
-                    <div class="post-card" onclick="showCurriculumDetail('${date}')">
-                        <div><h4>${curriculumData[date].title}</h4><p style="font-size:0.8rem; color:#888;">${date} 강의안내</p></div>
-                        <i class="fas fa-chevron-right" style="color:#ddd;"></i>
-                    </div>
-                `).join('');
+                html += Object.keys(curriculum).map(date => `<div class="post-card" onclick="showCurriculumDetail('${date}')"><div><h4>${curriculum[date].title}</h4><p style="font-size:0.8rem; color:#888;">${date} 강의안내</p></div><i class="fas fa-chevron-right" style="color:#ddd;"></i></div>`).join('');
             }
-            
-            html += posts.map(p => `
-                <div class="post-card" onclick="showPostDetail(${p.id})">
-                    <div><h4>${p.subject}</h4><p style="font-size:0.8rem; color:#888;">${p.date} ${p.fileName ? '📎' : ''}</p></div>
-                    <i class="fas fa-chevron-right" style="color:#ddd;"></i>
-                </div>
-            `).join('');
-
-            list.innerHTML = html || '<div style="padding:50px; text-align:center; color:#ccc;">등록된 글이 없습니다.</div>';
-        }
-
-        function showCurriculumDetail(date) {
-            const d = curriculumData[date];
-            document.getElementById('detail-modal').style.display = 'block';
-            document.getElementById('modal-view-title').innerText = d.title;
-            document.getElementById('modal-view-content').innerHTML = `<strong>1교시:</strong> ${d.c1} (${d.l1})\n<strong>2교시:</strong> ${d.c2} (${d.l2})`;
-            document.getElementById('modal-file-info').style.display = 'none';
+            html += getDB().filter(p => p.board === currentBoard).map(p => `<div class="post-card" onclick="showPostDetail(${p.id})"><div><h4>${p.subject}</h4><p style="font-size:0.8rem; color:#888;">${p.date} ${p.fileName ? '📎' : ''}</p></div><i class="fas fa-chevron-right" style="color:#ddd;"></i></div>`).join('');
+            list.innerHTML = html || '<div style="padding:50px; text-align:center; color:#ccc;">글이 없습니다.</div>';
         }
 
         function showPostDetail(id) {
             const p = getDB().find(i => i.id == id);
-            selectedPostId = id;
+            selectedId = id;
             document.getElementById('detail-modal').style.display = 'block';
             document.getElementById('modal-view-title').innerText = p.subject;
             document.getElementById('modal-view-content').innerText = p.content;
-            const fInfo = document.getElementById('modal-file-info');
+            const dl = document.getElementById('real-download-link');
             if(p.fileName) {
-                fInfo.style.display = 'block';
-                fInfo.innerHTML = `<i class="fas fa-download"></i> 첨부파일 다운로드: <a href="#" onclick="alert('다운로드 시뮬레이션: ${p.fileName}')">${p.fileName}</a>`;
-            } else { fInfo.style.display = 'none'; }
+                dl.style.display = 'block';
+                dl.href = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/files/${encodeURIComponent(p.fileName)}`;
+            } else { dl.style.display = 'none'; }
+        }
+
+        function showCurriculumDetail(date) {
+            const d = curriculum[date];
+            document.getElementById('detail-modal').style.display = 'block';
+            document.getElementById('modal-view-title').innerText = d.title;
+            document.getElementById('modal-view-content').innerHTML = `1교시: ${d.c1} (${d.l1})\n2교시: ${d.c2} (${d.l2})`;
+            document.getElementById('real-download-link').style.display = 'none';
         }
 
         function deletePost() {
             if(!confirm('삭제하시겠습니까?')) return;
-            saveDB(getDB().filter(i => i.id != selectedPostId));
+            saveDB(getDB().filter(i => i.id != selectedId));
             document.getElementById('detail-modal').style.display = 'none';
             drawBoard();
-        }
-
-        function editPost() {
-            const p = getDB().find(i => i.id == selectedPostId);
-            document.getElementById('detail-modal').style.display = 'none';
-            document.getElementById('edit-id').value = p.id;
-            document.getElementById('post-subject').value = p.subject;
-            document.getElementById('post-content').value = p.content;
-            showPage('write-page');
         }
 
         function showPage(pageId, title = '') {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             if(title) { currentBoard = title; document.getElementById('board-title').innerText = title; }
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            const tabs = document.querySelectorAll('.nav-tab');
-            if(pageId === 'main-page') tabs[0].classList.add('active');
-            if(pageId === 'member-page') { tabs[1].classList.add('active'); drawMembers(members); }
-            if(currentBoard === '공지사항') tabs[2].classList.add('active');
-            if(currentBoard === '학습자료') tabs[3].classList.add('active');
-            if(currentBoard === '사진첩') tabs[4].classList.add('active');
             if(pageId === 'board-page') drawBoard();
             window.scrollTo(0,0);
+        }
+
+        function openWrite() {
+            document.getElementById('post-subject').value = "";
+            document.getElementById('post-content').value = "";
+            document.getElementById('file-name-input').value = "";
+            showPage('write-page');
         }
 
         function changeMonth(delta) {
@@ -363,13 +294,13 @@
         function drawCalendar() {
             document.getElementById('cal-month-title').innerText = `${currentYear}년 ${currentMonth}월`;
             const grid = document.getElementById('cal-grid-content');
-            grid.innerHTML = '<div class="day-label">S</div><div class="day-label">M</div><div class="day-label">T</div><div class="day-label">W</div><div class="day-label">T</div><div class="day-label">F</div><div class="day-label">S</div>';
+            grid.innerHTML = '<div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>';
             const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
             const lastDate = new Date(currentYear, currentMonth, 0).getDate();
             for(let i=0; i<firstDay; i++) grid.innerHTML += '<div></div>';
             for(let d=1; d<=lastDate; d++) {
                 const fullDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                const event = curriculumData[fullDate];
+                const event = curriculum[fullDate];
                 const div = document.createElement('div');
                 if(new Date(currentYear, currentMonth - 1, d).getDay() === 1) div.className = 'monday';
                 if(event) { div.classList.add('has-event'); div.onclick = () => showCurriculumDetail(fullDate); }
