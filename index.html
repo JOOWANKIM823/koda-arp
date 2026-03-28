@@ -6,65 +6,55 @@
     <title>KODA ARP 12기</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --main-navy: #002d56; --sub-navy: #003a72; --gold: #D4AF37; --light-gray: #f8f9fa; }
+        :root { --navy: #002d56; --gold: #D4AF37; --bg: #f8f9fa; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
-        body { background: #e9ecef; color: #333; }
+        body { background: #eee; }
+        .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         
-        /* 앱 컨테이너 */
-        .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.2); }
-        
-        /* 페이지 전환 효과 */
+        /* 헤더 */
+        .main-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
+        .logo { font-weight: bold; color: var(--navy); font-size: 1.2rem; cursor: pointer; }
+
+        /* 페이지 관리 */
         .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 상단 헤더 */
-        .main-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #fff; border-bottom: 2px solid var(--main-navy); position: sticky; top:0; z-index:100; }
-        .logo { font-weight: 800; color: var(--main-navy); font-size: 1.3rem; cursor: pointer; letter-spacing: -1px; }
-        .menu-btn { color: var(--main-navy); font-size: 1.3rem; }
-
-        /* [1단계] 메인 비주얼 */
-        .main-visual { height: 260px; background-size: cover; background-position: center; position: relative; display: flex; align-items: center; justify-content: center; color: #fff; }
+        /* [1단계] 메인 대시보드 (배경 이미지 적용) */
+        .main-visual { height: 230px; background-size: cover; background-position: center; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; }
         .main-visual::before { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); }
-        .visual-text { position: relative; z-index: 2; text-align: center; }
-        .visual-text p { font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 8px; font-weight: 300; }
-        .visual-text h1 { font-size: 1.5rem; line-height: 1.4; font-weight: 700; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        .visual-text { position: relative; z-index: 2; }
 
-        /* 메인 대시보드 그리드 */
-        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; background: #f1f3f5; }
-        .grid-item { height: 160px; position: relative; cursor: pointer; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .grid-bg { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; filter: brightness(0.6); transition: 0.3s; }
-        .grid-item:hover .grid-bg { transform: scale(1.1); }
-        .grid-item i { position: relative; z-index: 2; font-size: 2.2rem; color: var(--gold); margin-bottom: 10px; }
-        .grid-label { position: relative; z-index: 2; color: #fff; font-weight: 700; font-size: 1rem; }
-        .grid-sub { position: relative; z-index: 2; color: rgba(255,255,255,0.7); font-size: 0.7rem; margin-top: 4px; text-transform: uppercase; }
+        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; }
+        .grid-item { height: 160px; position: relative; cursor: pointer; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #fff; border: 0.5px solid rgba(255,255,255,0.2); }
+        .grid-item::before { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); }
+        .grid-item i, .grid-item strong { position: relative; z-index: 2; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .grid-item i { font-size: 2.2rem; color: var(--gold); margin-bottom: 8px; }
 
         /* [2단계] 원우 리스트 */
-        .page-title { padding: 18px 20px; background: var(--light-gray); font-size: 1.2rem; font-weight: 700; color: var(--main-navy); border-bottom: 4px solid var(--gold); }
-        .search-section { padding: 15px 20px; background: #fff; border-bottom: 1px solid #eee; }
-        .search-bar { background: #f1f3f5; padding: 12px 15px; border-radius: 30px; display: flex; align-items: center; border: 1px solid #ddd; }
+        .page-title { padding: 15px; background: #f4f4f4; font-size: 1.1rem; font-weight: bold; border-bottom: 3px solid var(--navy); }
+        .search-section { padding: 15px; background: #fff; border-bottom: 1px solid #eee; }
+        .search-bar { background: #f1f3f5; padding: 10px 15px; border-radius: 30px; display: flex; align-items: center; border: 1px solid #ddd; }
         .search-bar input { border: none; background: none; outline: none; width: 100%; margin-left: 10px; font-size: 1rem; }
         
-        .member-list { list-style: none; }
-        .member-card { display: flex; padding: 18px 20px; border-bottom: 1px solid #eee; align-items: center; gap: 20px; cursor: pointer; transition: 0.2s; }
-        .member-card:active { background: #f8f9fa; }
-        .photo-area { width: 85px; height: 110px; border: 1px solid #ddd; border-radius: 6px; overflow: hidden; background: #f0f0f0; box-shadow: 2px 2px 8px rgba(0,0,0,0.05); }
+        .member-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; cursor: pointer; }
+        .photo-area { width: 80px; height: 100px; border: 1px solid #ddd; overflow: hidden; background: #f0f0f0; }
         .photo-area img { width: 100%; height: 100%; object-fit: cover; }
-        .info-area h3 { font-size: 1.2rem; color: #222; margin-bottom: 8px; letter-spacing: 2px; }
-        .info-area p { font-size: 0.9rem; color: #666; }
+        .info-area h3 { font-size: 1.15rem; margin-bottom: 5px; letter-spacing: 2px; }
+        .info-area p { font-size: 0.85rem; color: #666; }
+        .icon-group i { color: #adb5bd; border: 1px solid #ddd; padding: 6px; border-radius: 50%; font-size: 0.75rem; margin-right: 5px; }
 
         /* [3단계] 상세 팝업 */
-        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); }
-        .modal-content { background: #fff; margin: 8% auto; padding: 0; width: 92%; border-radius: 15px; overflow: hidden; position: relative; }
-        .modal-header-box { background: var(--main-navy); color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .modal-body-content { padding: 25px 20px; }
-        .detail-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .detail-table th { background: #f8f9fa; padding: 12px; border: 1px solid #eee; text-align: left; font-size: 0.9rem; width: 35%; color: #555; }
-        .detail-table td { padding: 12px; border: 1px solid #eee; font-size: 0.9rem; font-weight: 500; }
+        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .modal-content { background: #fff; margin: 10% auto; padding: 25px; width: 92%; border-radius: 12px; }
+        .modal-header-box { display: flex; justify-content: space-between; border-bottom: 2px solid var(--navy); padding-bottom: 10px; margin-bottom: 20px; }
+        .detail-table { width: 100%; border-collapse: collapse; }
+        .detail-table th { background: #f8f9fa; padding: 10px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; width: 35%; }
+        .detail-table td { padding: 10px; border: 1px solid #eee; font-size: 0.85rem; }
 
-        /* 하단 푸터 */
-        .main-footer { background: #222; color: #888; padding: 40px 20px; text-align: center; font-size: 0.8rem; border-top: 5px solid var(--main-navy); }
-        .footer-info strong { color: #bbb; display: block; margin-bottom: 10px; }
+        /* 푸터 수정 (한국디벨로퍼협회 반영) */
+        .main-footer { background: #333; color: #aaa; padding: 30px 20px; text-align: center; font-size: 0.75rem; }
+        .footer-info strong { color: #fff; }
     </style>
 </head>
 <body>
@@ -77,50 +67,36 @@
         <div id="main-page" class="page active">
             <section class="main-visual" style="background-image: url('Main-bg.jpg');">
                 <div class="visual-text">
-                    <p>한국부동산개발협회</p>
+                    <p style="font-size:0.8rem; letter-spacing:2px;">한국디벨로퍼협회</p>
                     <h1>창조도시부동산융합<br>최고위과정(ARP)</h1>
                 </div>
             </section>
             <nav class="grid-menu">
-                <div class="grid-item" onclick="showPage('member-page')">
-                    <div class="grid-bg" style="background-image: url('thumb-member.jpg');"></div>
-                    <i class="far fa-id-card"></i>
-                    <div class="grid-label">원우수첩</div>
-                    <div class="grid-sub">Mobile Note</div>
+                <div class="grid-item" onclick="showPage('member-page')" style="background-image: url('thumb-member.jpg');">
+                    <i class="fas fa-id-card"></i><strong>원우수첩</strong>
                 </div>
-                <div class="grid-item" onclick="alert('준비 중입니다.')">
-                    <div class="grid-bg" style="background-image: url('thumb-board.jpg');"></div>
-                    <i class="far fa-images"></i>
-                    <div class="grid-label">게시판 & 사진첩</div>
-                    <div class="grid-sub">Board & Album</div>
+                <div class="grid-item" onclick="alert('준비 중입니다.')" style="background-image: url('thumb-board.jpg');">
+                    <i class="fas fa-images"></i><strong>게시판 & 사진첩</strong>
                 </div>
-                <div class="grid-item" onclick="alert('준비 중입니다.')">
-                    <div class="grid-bg" style="background-image: url('thumb-notice.jpg');"></div>
-                    <i class="fas fa-bullhorn"></i>
-                    <div class="grid-label">공지 및 일정</div>
-                    <div class="grid-sub">Notice & Plan</div>
+                <div class="grid-item" onclick="alert('준비 중입니다.')" style="background-image: url('thumb-notice.jpg');">
+                    <i class="fas fa-bullhorn"></i><strong>공지 및 일정</strong>
                 </div>
-                <div class="grid-item" onclick="alert('준비 중입니다.')">
-                    <div class="grid-bg" style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=400');"></div>
-                    <i class="fas fa-university"></i>
-                    <div class="grid-label">협회소개</div>
-                    <div class="grid-sub">About KODA</div>
-                </div>
+                <div class="grid-item"><i class="fas fa-university"></i><strong>협회소개</strong></div>
             </nav>
         </div>
 
         <div id="member-page" class="page">
             <div class="page-title">원우회 <span>12기 리스트</span></div>
             <div class="search-section">
-                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="member-search" placeholder="성함 또는 소속으로 검색"></div>
+                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="member-search" placeholder="성함 또는 소속 검색"></div>
             </div>
-            <ul id="member-list-items" class="member-list"></ul>
+            <div id="member-list-items"></div>
         </div>
 
         <footer class="main-footer">
             <div class="footer-info">
-                <strong>KODA-ARP 최고위과정</strong>
-                (06152) 서울시 강남구 테헤란로 305, 11층<br>
+                <strong>한국디벨로퍼협회(KODA) 창조도시부동산융합 최고위과정</strong><br>
+                (06152) 서울시 강남구 테헤란로 305, 11층 (역삼동, 한국기술센터)<br>
                 TEL: 02-512-4750 | FAX: 02-512-4752
             </div>
         </footer>
@@ -128,11 +104,8 @@
 
     <div id="detail-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header-box">
-                <span style="font-weight:bold; letter-spacing:1px;">원우 상세정보</span>
-                <i class="fas fa-times" onclick="closeModal()" style="cursor:pointer; font-size:1.5rem;"></i>
-            </div>
-            <div id="modal-body" class="modal-body-content"></div>
+            <div class="modal-header-box"><span style="font-weight:bold; color:var(--navy);">원우 상세정보</span><i class="fas fa-times" onclick="closeModal()" style="cursor:pointer;"></i></div>
+            <div id="modal-body"></div>
         </div>
     </div>
 
