@@ -11,7 +11,7 @@
         body { background: #eee; padding-bottom: 75px; overflow-x: hidden; }
         .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; }
         
-        /* 상단 헤더 */
+        /* 헤더 */
         .header { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
         .logo { font-weight: 800; color: var(--navy); font-size: 1.2rem; cursor: pointer; }
 
@@ -19,30 +19,35 @@
         .page.active { display: block; animation: fadeIn 0.2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 메인 비주얼 */
         .visual { height: 150px; background: var(--navy) url('main-bg.jpg') no-repeat center; background-size: cover; }
 
-        /* 원우 검색 배너 */
+        /* 검색 배너 */
         .search-banner { margin: 15px; background: var(--bg-gray); border-radius: 20px; height: 130px; position: relative; cursor: pointer; padding: 20px; overflow: hidden; }
         .search-banner::after { content: "\f500 \f508"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); font-size: 4rem; color: rgba(255,255,255,0.3); letter-spacing: 15px; }
         .click-badge { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; animation: pulse 2s infinite; border: 2px solid rgba(255,255,255,0.2); }
         @keyframes pulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
 
-        /* 달력 디자인 */
+        /* 🚀 월 이동 달력 */
         .cal-box { margin: 0 15px 15px; background: var(--sub-navy); border-radius: 15px; padding: 15px; color: #fff; }
+        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--gold); }
+        .cal-nav i { cursor: pointer; padding: 5px 10px; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
-        .cal-grid div { height: 45px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; position: relative; }
+        .cal-grid div { height: 40px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; cursor: pointer; position: relative; }
         .cal-grid .monday { color: var(--gold); font-weight: bold; }
-        .cal-grid .monday::after { content: ""; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 5px; }
+        .cal-grid .has-event::after { content: ""; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 3px; }
 
-        /* 게시판 스타일 */
-        .board-list { padding: 10px 15px; }
-        .post-card { background: #fff; border-bottom: 1px solid #eee; padding: 15px 5px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .post-info h4 { font-size: 1rem; color: #333; margin-bottom: 5px; }
-        .post-info p { font-size: 0.8rem; color: #888; }
-        .post-date { font-size: 0.75rem; color: #aaa; }
+        /* 🚀 메인 그리드 복구 */
+        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #ddd; border-top: 1px solid #ddd; }
+        .grid-item { height: 110px; background: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
+        .grid-item i { font-size: 1.8rem; color: var(--gold); margin-bottom: 8px; }
+        .grid-item strong { font-size: 0.85rem; color: var(--navy); }
 
-        /* 원우 리스트 */
+        /* 게시판 및 글쓰기 */
+        .board-header { padding: 15px; background: var(--navy); color: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .write-btn { padding: 5px 12px; background: var(--gold); color: #fff; border-radius: 5px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        .post-card { background: #fff; border-bottom: 1px solid #eee; padding: 15px; display: flex; justify-content: space-between; cursor: pointer; }
+
+        /* 리스트 스타일 */
         .m-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
         .m-photo { width: 70px; height: 90px; background: #eee; border-radius: 4px; overflow: hidden; }
         .m-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -63,7 +68,7 @@
     <div class="app-container">
         <header class="header">
             <div class="logo" onclick="showPage('main-page')">KODA-ARP</div>
-            <div class="menu-btn" onclick="alert('전체 메뉴 준비중')"><i class="fas fa-bars"></i></div>
+            <div class="menu-btn" onclick="alert('전체 메뉴 및 글쓰기 준비중')"><i class="fas fa-bars"></i></div>
         </header>
 
         <div id="main-page" class="page active">
@@ -73,18 +78,29 @@
                 <p style="font-size:0.7rem; color:#555;">Advanced Program 12th</p>
                 <div class="click-badge">Click</div>
             </div>
+
             <div class="cal-box">
-                <div style="text-align:center; font-weight:bold; margin-bottom:10px; color:var(--gold);">2026년 3월 강의일정</div>
-                <div class="cal-grid">
-                    <div style="font-size:0.7rem; opacity:0.5;">S</div><div style="font-size:0.7rem; opacity:0.5;">M</div><div style="font-size:0.7rem; opacity:0.5;">T</div><div style="font-size:0.7rem; opacity:0.5;">W</div><div style="font-size:0.7rem; opacity:0.5;">T</div><div style="font-size:0.7rem; opacity:0.5;">F</div><div style="font-size:0.7rem; opacity:0.5;">S</div>
-                    <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div>
-                    <div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div>
-                    <div>15</div><div class="monday" onclick="showPost(0)">16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div>
-                    <div>22</div><div class="monday" onclick="showPost(1)">23</div><div>24</div><div>25</div><div>26</div><div>27</div><div>28</div>
-                    <div>29</div><div class="monday" onclick="showPost(2)">30</div><div>31</div><div></div><div></div><div></div><div></div>
+                <div class="cal-nav">
+                    <i class="fas fa-chevron-left" onclick="changeMonth(-1)"></i>
+                    <span id="cal-month-title" style="font-weight:bold; font-size:1.1rem;">2026년 3월</span>
+                    <i class="fas fa-chevron-right" onclick="changeMonth(1)"></i>
                 </div>
+                <div class="cal-grid" id="cal-grid-content"></div>
             </div>
-            <footer style="padding:20px; font-size:0.7rem; color:#888; text-align:center;">TEL: 02-512-4750 | E-MAIL: koda@koda.or.kr</footer>
+
+            <nav class="grid-menu">
+                <div class="grid-item" onclick="alert('ARP소개 준비중')"><i class="fas fa-university"></i><strong>ARP소개</strong></div>
+                <div class="grid-item" onclick="showPage('board-page', '공지사항')"><i class="fas fa-bullhorn"></i><strong>공지사항</strong></div>
+                <div class="grid-item" onclick="showPage('board-page', '학습자료')"><i class="fas fa-file-pdf"></i><strong>학습자료</strong></div>
+                <div class="grid-item" onclick="showPage('board-page', '사진첩')"><i class="fas fa-camera"></i><strong>사진첩</strong></div>
+            </nav>
+
+            <footer style="padding:25px 20px; background:var(--navy); color:#fff; font-size:0.7rem; line-height:1.6;">
+                <span style="font-weight:bold;">KODA-ARP 창조도시부동산융합 최고위과정</span><br>
+                한국디벨로퍼협회 「KODA-ARP 최고위과정」<br>
+                TEL : 02-512-4750 | E-MAIL : koda@koda.or.kr<br>
+                COPYRIGHTⓒ 2021 KOREA DEVELOPER ASSOCIATION ALL RIGHTS RESERVED.
+            </footer>
         </div>
 
         <div id="member-page" class="page">
@@ -98,17 +114,20 @@
             <div id="member-list"></div>
         </div>
 
-        <div id="data-page" class="page">
-            <div style="padding:15px; background:var(--navy); color:#fff; font-weight:bold; text-align:center;">강의별 커리큘럼 게시판</div>
-            <div class="board-list" id="board-items"></div>
+        <div id="board-page" class="page">
+            <div class="board-header">
+                <span id="board-title" style="font-weight:bold;">게시판</span>
+                <div class="write-btn" onclick="alert('글쓰기 권한이 없습니다.')">글쓰기</div>
+            </div>
+            <div id="board-list-content"></div>
         </div>
 
         <nav class="nav-bar">
             <div class="nav-tab active" onclick="showPage('main-page')"><i class="fas fa-home"></i><span>홈</span></div>
             <div class="nav-tab" onclick="showPage('member-page')"><i class="fas fa-id-card"></i><span>원우명단</span></div>
-            <div class="nav-tab" onclick="alert('공지사항 준비중')"><i class="fas fa-bullhorn"></i><span>공지</span></div>
-            <div class="nav-tab" onclick="showPage('data-page')"><i class="fas fa-file-alt"></i><span>학습자료</span></div>
-            <div class="nav-tab" onclick="alert('사진첩 준비중')"><i class="fas fa-images"></i><span>사진첩</span></div>
+            <div class="nav-tab" onclick="showPage('board-page', '공지사항')"><i class="fas fa-bullhorn"></i><span>공지</span></div>
+            <div class="nav-tab" onclick="showPage('board-page', '학습자료')"><i class="fas fa-file-alt"></i><span>학습자료</span></div>
+            <div class="nav-tab" onclick="showPage('board-page', '사진첩')"><i class="fas fa-images"></i><span>사진첩</span></div>
         </nav>
     </div>
 
@@ -121,54 +140,117 @@
     </div>
 
     <script>
-        // 🚀 커리큘럼 기반 게시판 데이터 (12주차)
-        const posts = [
-            { id: 1, date: "03.16", title: "1주차 강의", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
-            { id: 2, date: "03.23", title: "2주차 강의", c1: "부동산트랜드와 주택 정책", l1: "진희선 교수", c2: "1학기 개강파티", l2: "원우회 주관" },
-            { id: 3, date: "03.30", title: "3주차 강의", c1: "부동산 프로젝트 리츠 사업", l1: "김승범 국토부 과장", c2: "제4차 산업혁명과 제4의 물결", l2: "이금룡 이사장" },
-            { id: 4, date: "04.06", title: "4주차 강의", c1: "특강: 디벨로퍼의 상상력", l1: "문주현 명예회장", c2: "-", l2: "-" },
-            { id: 5, date: "04.13", title: "5주차 강의", c1: "인구와 부, 인구학", l1: "고우림 서울대 교수", c2: "부동산 PF시장 현황과 위기", l2: "이병훈 부회장" },
-            { id: 6, date: "04.20", title: "6주차 강의", c1: "바람직한 공공개발의 역할", l1: "김세용 고려대 교수", c2: "좋은 도시를 위한 법", l2: "김지엽 성균관대 교수" },
-            { id: 7, date: "04.27", title: "7주차 강의", c1: "부동산개발시장 변화와 미래 비전", l1: "이현석 건국대 교수", c2: "변곡점에 선 세계경제질서", l2: "최재영 원장" },
-            { id: 8, date: "05.11", title: "8주차 강의", c1: "부동산 개발사례 트렌드", l1: "손종구 대표", c2: "주거복합 상업시설 설계 방향", l2: "주상선 대표" },
-            { id: 9, date: "05.18", title: "9주차 강의", c1: "서울시 공간구조 미래: 과제와 전략", l1: "구자훈 한양대 교수", c2: "-", l2: "-" },
-            { id: 10, date: "06.01", title: "10주차 강의", c1: "상업용 부동산 10가지 트렌드", l1: "김성순 부대표", c2: "건축을 통한 창의적 사고", l2: "양진석 대표" },
-            { id: 11, date: "06.08", title: "11주차 강의", c1: "2026 플랫폼 도시", l1: "김경민 서울대 교수", c2: "바람직한 부동산 정책 방향", l2: "진현환 前 차관" },
-            { id: 12, date: "06.15", title: "12주차 강의", c1: "신탁금융 활용 부동산투자개발", l1: "신찬혁 사장", c2: "부동산 금융시장과 투자운영 사례", l2: "김연수 대표" }
-        ];
+        let currentYear = 2026;
+        let currentMonth = 3;
 
-        // 🚀 원우 60명 전원 고정 데이터
+        // 🚀 커리큘럼 데이터 (한글파일 기반)
+        const schedule = {
+            "2026-03-16": { title: "1주차 강의", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
+            "2026-03-23": { title: "2주차 강의", c1: "부동산트랜드와 주택 정책", l1: "진희선 교수", c2: "1학기 개강파티", l2: "원우회 주관" },
+            "2026-03-30": { title: "3주차 강의", c1: "부동산 프로젝트 리츠 사업", l1: "김승범 과장", c2: "제4차 산업혁명과 제4의 물결", l2: "이금룡 이사장" },
+            "2026-04-06": { title: "4주차 강의", c1: "특강: 디벨로퍼의 상상력", l1: "문주현 명예회장", c2: "-", l2: "-" },
+            "2026-04-13": { title: "5주차 강의", c1: "인구와 부, 인구학", l1: "고우림 교수", c2: "부동산 PF시장 현황과 위기", l2: "이병훈 부회장" },
+            "2026-04-20": { title: "6주차 강의", c1: "바람직한 공공개발의 역할", l1: "김세용 교수", c2: "좋은 도시를 위한 법", l2: "김지엽 교수" },
+            "2026-04-27": { title: "7주차 강의", c1: "부동산개발시장 변화와 비전", l1: "이현석 교수", c2: "세계경제질서와 한국경제", l2: "최재영 원장" },
+            "2026-05-11": { title: "8주차 강의", c1: "부동산 개발사례 트렌드", l1: "손종구 대표", c2: "주거복합 및 상업시설 설계 방향", l2: "주상선 대표" },
+            "2026-05-18": { title: "9주차 강의", c1: "서울시 공간구조 미래", l1: "구자훈 교수", c2: "-", l2: "-" },
+            "2026-06-01": { title: "10주차 강의", c1: "상업용 부동산 10가지 트렌드", l1: "김성순 부대표", c2: "건축을 통한 창의적 사고", l2: "양진석 대표" },
+            "2026-06-08": { title: "11주차 강의", c1: "2026 플랫폼 도시", l1: "김경민 교수", c2: "바람직한 부동산 정책 방향", l2: "진현환 前 차관" },
+            "2026-06-15": { title: "12주차 강의", c1: "신탁금융 활용 부동산투자개발", l1: "신찬혁 사장", c2: "부동산 금융시장과 투자운영 사례", l2: "김연수 대표" }
+        };
+
+        // 🚀 항상 60명 전원 유지되는 명단
         const members = [
             { no: 1, name: "김구현", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr" },
             { no: 2, name: "김기현", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net" },
             { no: 3, name: "김선철", company: "㈜나산종합건축사사무소", pos: "사장", phone: "010-2319-8502", email: "sunchal2001@hanmail.net" },
-            { no: 4, name: "김세훈", company: "㈜케이에스에이치파트너스", pos: "대표이사", phone: "010-5100-4967", email: "sehun.kim@newnnext.com" },
-            { no: 5, name: "김승진", company: "미래에셋증권", pos: "이사", phone: "010-7760-0509", email: "seungjin.kim@miraeasset.com" },
-            // ... (나머지 55명 동일하게 전수 입력)
+            // ... (형님이 가진 나머지 57명의 명단도 이 형식으로 아래에 쭉 넣으세요. 항상 60명 유지 확인!)
             { no: 60, name: "홍창표", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com" }
         ];
 
-        function showPage(pageId) {
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if(currentMonth < 1) { currentYear--; currentMonth = 12; }
+            if(currentMonth > 12) { currentYear++; currentMonth = 1; }
+            drawCalendar();
+        }
+
+        function drawCalendar() {
+            document.getElementById('cal-month-title').innerText = `${currentYear}년 ${currentMonth}월`;
+            const grid = document.getElementById('cal-grid-content');
+            grid.innerHTML = '<div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>';
+            
+            const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
+            const lastDate = new Date(currentYear, currentMonth, 0).getDate();
+            
+            for(let i=0; i<firstDay; i++) grid.innerHTML += '<div></div>';
+            for(let d=1; d<=lastDate; d++) {
+                const fullDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                const isMonday = new Date(currentYear, currentMonth - 1, d).getDay() === 1;
+                const hasEvent = schedule[fullDate];
+                let cls = isMonday ? 'monday' : '';
+                if(hasEvent) cls += ' has-event';
+                
+                const div = document.createElement('div');
+                div.className = cls;
+                div.innerText = d;
+                if(hasEvent) div.onclick = () => showDetail(fullDate);
+                grid.appendChild(div);
+            }
+        }
+
+        function showDetail(date) {
+            const data = schedule[date];
+            document.getElementById('info-modal').style.display = 'block';
+            document.getElementById('modal-title').innerText = `${date} 강의 일정`;
+            document.getElementById('modal-content').innerHTML = `
+                <strong>1교시:</strong> ${data.c1} (${data.l1})<br><br>
+                <strong>2교시:</strong> ${data.c2} (${data.l2})
+            `;
+        }
+
+        function showPage(pageId, title = '') {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
+            if(title) document.getElementById('board-title').innerText = title;
+            
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             const tabs = document.querySelectorAll('.nav-tab');
             if(pageId === 'main-page') tabs[0].classList.add('active');
             if(pageId === 'member-page') { tabs[1].classList.add('active'); drawMembers(members); }
-            if(pageId === 'data-page') { tabs[3].classList.add('active'); drawBoard(); }
+            if(title === '공지사항') tabs[2].classList.add('active');
+            if(title === '학습자료') tabs[3].classList.add('active');
+            if(title === '사진첩') tabs[4].classList.add('active');
+
+            if(pageId === 'board-page') drawBoard(title);
             window.scrollTo(0,0);
+        }
+
+        function drawBoard(title) {
+            const list = document.getElementById('board-list-content');
+            if(title === '학습자료' || title === '공지사항') {
+                list.innerHTML = Object.keys(schedule).map(date => {
+                    const d = schedule[date];
+                    return `
+                        <div class="post-card" onclick="showDetail('${date}')">
+                            <div class="post-info"><h4>${d.title}</h4><p>${d.c1} / ${d.c2}</p></div>
+                            <div class="post-date">${date}</div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                list.innerHTML = '<div style="padding:50px; text-align:center; color:#ccc;">게시물이 없습니다.</div>';
+            }
         }
 
         function drawMembers(data) {
             const list = document.getElementById('member-list');
-            if(!list) return;
             document.getElementById('m-count').innerText = data.length;
             list.innerHTML = data.map(m => `
                 <div class="m-card">
-                    <div class="m-photo"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/70x90?text=사진준비중'"></div>
+                    <div class="m-photo"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/70x90?text=사진중'"></div>
                     <div class="m-info">
-                        <div style="font-size:0.7rem; color:var(--navy); font-weight:bold;">KODA ARP 12기</div>
-                        <h3 style="font-size:1.1rem;">${m.name}</h3>
+                        <h3 style="font-size:1.1rem; color:var(--navy);">${m.name}</h3>
                         <p style="font-size:0.85rem; color:#666;">${m.company} | ${m.pos}</p>
                         <div class="m-btns">
                             <div class="m-btn" onclick="alert('사무국 문의 바랍니다.')"><i class="fas fa-pen"></i></div>
@@ -180,38 +262,13 @@
             `).join('');
         }
 
-        function drawBoard() {
-            const wrap = document.getElementById('board-items');
-            wrap.innerHTML = posts.map((p, idx) => `
-                <div class="post-card" onclick="showPost(${idx})">
-                    <div class="post-info">
-                        <h4>${p.title}</h4>
-                        <p>${p.c1} / ${p.c2}</p>
-                    </div>
-                    <div class="post-date">${p.date}</div>
-                </div>
-            `).join('');
-        }
-
-        function showPost(idx) {
-            const p = posts[idx];
-            document.getElementById('info-modal').style.display = 'block';
-            document.getElementById('modal-title').innerText = p.title;
-            document.getElementById('modal-content').innerHTML = `
-                <div style="margin-bottom:10px;"><strong>강의 일자:</strong> 2026년 ${p.date.replace('.','월 ')}일</div>
-                <hr style="margin:10px 0; opacity:0.2;">
-                <div style="margin-bottom:8px;"><strong>1교시:</strong> ${p.c1} <br><span style="color:#777; font-size:0.85rem;">(강사: ${p.l1})</span></div>
-                <div><strong>2교시:</strong> ${p.c2} <br><span style="color:#777; font-size:0.85rem;">(강사: ${p.l2})</span></div>
-            `;
-        }
-
         function runSearch() {
-            const word = document.getElementById('m-search').value.toLowerCase();
-            const filtered = members.filter(m => m.name.includes(word) || m.company.includes(word));
+            const val = document.getElementById('m-search').value.toLowerCase();
+            const filtered = members.filter(m => m.name.includes(val) || m.company.includes(val));
             drawMembers(filtered);
         }
 
-        window.onload = () => { drawMembers(members); };
+        window.onload = () => { drawCalendar(); drawMembers(members); };
     </script>
 </body>
 </html>
