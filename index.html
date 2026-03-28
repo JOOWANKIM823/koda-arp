@@ -3,54 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KODA ARP 12기</title>
+    <title>KODA ARP 12기 원우수첩</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
 </head>
 <body>
-    <div class="app-container">
-        <div id="main-page" class="page active">
-            <header class="main-header">
-                <div class="logo">KODA ARP</div>
-                <div class="header-right"><span>12기</span></div>
-            </header>
-            <section class="main-visual">
-                <div class="visual-text">
-                    <p>KODA ARP 최고위과정</p>
-                    <h1>대한민국을 대표하는<br>부동산 전문가의 자부심</h1>
-                </div>
-            </section>
-            <nav class="grid-menu">
-                <div class="grid-item" onclick="showPage('member-page')">
-                    <i class="far fa-id-card"></i>
-                    <strong>원우수첩</strong>
-                    <span>MOBILE NOTE</span>
-                </div>
-                <div class="grid-item"><i class="far fa-newspaper"></i><strong>소식</strong><span>NEWS</span></div>
-            </nav>
-        </div>
+    <header>
+        <h1>KODA ARP 12기</h1>
+        <p>MEMBERS DIRECTORY</p>
+    </header>
 
-        <div id="member-page" class="page">
-            <header class="sub-header">
-                <button onclick="showPage('main-page')" class="back-btn"><i class="fas fa-chevron-left"></i></button>
-                <div class="header-center">12기 원우수첩</div>
-                <div class="header-right"><span>총 <b id="total-count">60</b>명</span></div>
-            </header>
-            <div class="search-section">
-                <input type="text" id="member-search" placeholder="이름 검색">
-            </div>
-            <div class="member-container">
-                <ul id="member-list-items" class="member-list"></ul>
-            </div>
-        </div>
-    </div>
+    <nav class="filter-bar">
+        <button class="active" onclick="filterSelection('all')">전체</button>
+        <button onclick="filterSelection('창조')">창조</button>
+        <button onclick="filterSelection('개발')">개발</button>
+        <button onclick="filterSelection('융합')">융합</button>
+        <button onclick="filterSelection('도시')">도시</button>
+    </nav>
 
-    <div id="detail-modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modal-body"></div>
-        </div>
-    </div>
+    <main class="member-grid" id="memberList">
+        </main>
 
     <script src="script.js"></script>
 </body>
