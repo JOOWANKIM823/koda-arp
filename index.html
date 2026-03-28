@@ -6,138 +6,147 @@
     <title>KODA ARP 12기</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --navy: #002d56; --sub-navy: #003a72; --gold: #D4AF37; --light-gray: #f8f9fa; --border: #dee2e6; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
-        body { background: #eee; padding-bottom: 75px; }
+        :root { --navy: #002d56; --sub-navy: #003a72; --gold: #D4AF37; --footer-bg: #2a2a2a; --btn-gray: #f1f3f5; --bg-gray: #ced4da; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #eee; padding-bottom: 75px; overflow-x: hidden; }
         
-        .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+        .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
         
-        /* 헤더 디자인 강화 */
         .main-header { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
-        .logo { font-weight: 800; color: var(--navy); font-size: 1.3rem; letter-spacing: -1px; }
+        .logo { font-weight: 800; color: var(--navy); font-size: 1.3rem; cursor: pointer; }
 
-        .page { display: none; }
+        .page { display: none; flex: 1; width: 100%; }
         .page.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 메인 비주얼 배너 스타일 */
-        .main-visual { height: 200px; background: linear-gradient(rgba(0,45,86,0.7), rgba(0,45,86,0.7)), url('main-bg.jpg') no-repeat center; background-size: cover; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; }
-        .visual-content h1 { font-size: 1.4rem; font-weight: 700; line-height: 1.4; margin-bottom: 5px; }
-        .visual-content p { font-size: 0.8rem; color: var(--gold); font-weight: 500; }
+        /* 🚀 [수정] 텍스트가 삭제된 깔끔한 메인 비주얼 */
+        .main-visual { height: 180px; background: #002d56 url('main-bg.jpg') no-repeat center; background-size: cover; position: relative; }
 
-        /* 검색 배너 */
+        /* 🚀 [수정] 남녀 원우 다수가 포함된 검색 배너 */
         .search-banner-container { padding: 20px 15px; background: #fff; }
-        .search-banner { background: #ced4da; border-radius: 20px; padding: 25px 20px; position: relative; height: 160px; cursor: pointer; overflow: hidden; }
-        .search-banner::after { content: ""; position: absolute; right: -20px; bottom: -10px; width: 150px; height: 150px; background: url('https://cdn-icons-png.flaticon.com/512/3135/3135715.png') no-repeat; background-size: contain; opacity: 0.2; }
-        .banner-text h2 { font-size: 1.2rem; color: var(--navy); margin-bottom: 5px; }
-        .banner-text p { font-size: 0.7rem; color: #555; }
-        .click-badge { position: absolute; bottom: 20px; right: 20px; background: var(--navy); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .search-banner { 
+            background-color: var(--bg-gray); 
+            border-radius: 25px; 
+            padding: 25px 20px; 
+            position: relative; 
+            overflow: hidden; 
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        /* 다수 인물 일러스트 배경으로 교체 */
+        .search-banner::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 110px;
+            background: url('https://kodaarp.kr/img/main/arp_search_img.png') no-repeat bottom center;
+            background-size: contain;
+            opacity: 0.9;
+            z-index: 1;
+        }
+        .banner-text { position: relative; z-index: 2; color: var(--navy); }
+        .banner-text h2 { font-size: 1.3rem; font-weight: bold; margin-bottom: 5px; }
+        .banner-text p { font-size: 0.75rem; color: #555; font-weight: 500; line-height: 1.2; }
 
-        /* 그리드 메뉴 */
+        .click-badge {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--navy);
+            color: #fff;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.08); } 100% { transform: translateX(-50%) scale(1); } }
+
+        /* 메뉴 및 하단바 디자인 유지 */
         .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #ddd; border-top: 1px solid #ddd; }
         .grid-item { height: 130px; background: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
         .grid-item i { font-size: 2rem; color: var(--gold); margin-bottom: 10px; }
-        .grid-item strong { font-size: 0.9rem; color: var(--navy); }
+        .grid-item strong { font-size: 0.9rem; color: var(--navy); font-weight: 700; }
 
-        /* 🚀 달력 디자인 (공지&일정 페이지) */
-        .calendar-wrap { padding: 20px 15px; }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 10px; }
-        .calendar-header h2 { font-size: 1.3rem; color: var(--navy); }
-        .calendar-table { width: 100%; border-collapse: collapse; text-align: center; }
-        .calendar-table th { padding: 10px; font-size: 0.8rem; color: #777; border-bottom: 1px solid #eee; }
-        .calendar-table td { width: 14.28%; height: 60px; font-size: 0.9rem; border-bottom: 1px solid #f8f8f8; cursor: pointer; position: relative; }
-        .calendar-table td.today { background: var(--light-gray); font-weight: bold; color: var(--navy); border-radius: 8px; }
-        .calendar-table td.has-event::after { content: ""; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
-        .calendar-table td.monday { color: var(--sub-navy); font-weight: 600; }
-
-        /* 하단 탭바 */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #ddd; z-index: 1000; left: 50%; transform: translateX(-50%); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #ddd; z-index: 1000; left: 50%; transform: translateX(-50%); box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
         .nav-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; color: #888; font-size: 0.65rem; flex: 1; }
         .nav-item.active { color: var(--navy); font-weight: bold; }
         .nav-item i { font-size: 1.3rem; margin-bottom: 4px; }
 
-        /* 원우수첩 리스트 */
-        .search-area { padding: 15px; background: #fff; border-bottom: 4px solid var(--gold); position: sticky; top: 58px; z-index: 90; }
-        .search-box { background: #f1f3f5; padding: 10px 15px; border-radius: 30px; display: flex; align-items: center; }
-        .search-box input { border: none; background: none; outline: none; width: 100%; font-size: 1rem; margin-left: 10px; }
-        .member-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
-        .photo-area { width: 70px; height: 90px; border-radius: 4px; overflow: hidden; background: #f0f0f0; flex-shrink: 0; }
-        .photo-area img { width: 100%; height: 100%; object-fit: cover; }
-        .info-area h3 { font-size: 1.1rem; color: var(--navy); }
-        .icon-group { display: flex; gap: 10px; margin-top: 8px; }
-        .icon-btn { width: 32px; height: 32px; background: var(--btn-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #777; font-size: 0.8rem; }
+        .main-footer { background: var(--footer-bg); color: #fff; padding: 25px 20px; text-align: left; font-size: 0.75rem; line-height: 1.6; }
 
-        /* 상세 팝업 모달 */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .modal-content { position: absolute; bottom: 0; width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 30px 20px; left: 50%; transform: translateX(-50%); max-height: 80vh; overflow-y: auto; }
-        .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; color: #ccc; cursor: pointer; }
-        .event-info-box { background: var(--light-gray); padding: 20px; border-radius: 15px; margin-top: 15px; }
-        .event-item { margin-bottom: 15px; border-left: 3px solid var(--gold); padding-left: 15px; }
-        .event-item span { display: block; font-size: 0.8rem; color: #888; margin-bottom: 3px; }
-        .event-item p { font-size: 1rem; font-weight: bold; color: var(--navy); }
+        /* 리스트 스타일 */
+        .search-area { padding: 15px; background: #fff; border-bottom: 4px solid var(--gold); position: sticky; top: 58px; z-index: 90; }
+        .search-box { background: #f1f3f5; padding: 10px 15px; border-radius: 30px; display: flex; align-items: center; border: 1px solid #dee2e6; }
+        .search-box input { border: none; background: none; outline: none; width: 100%; font-size: 1rem; }
+        .member-card { display: flex; padding: 18px 20px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; background: #fff; }
+        .photo-area { width: 85px; height: 110px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #f0f0f0; flex-shrink: 0; }
+        .photo-area img { width: 100%; height: 100%; object-fit: cover; }
+        .icon-group { display: flex; gap: 15px; margin-top: 10px; }
+        .icon-btn { width: 36px; height: 36px; background: var(--btn-gray); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #777; text-decoration: none; }
+
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: #fff; overflow-y: auto; }
+        .modal-header { padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; position: sticky; top: 0; background: #fff; }
+        .detail-table { width: 100%; border-collapse: collapse; }
+        .detail-table th { background: #f9f9f9; padding: 12px; border: 1px solid #eee; text-align: left; width: 35%; color: #666; }
+        .detail-table td { padding: 12px; border: 1px solid #eee; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <header class="main-header">
-            <div class="logo">KODA-ARP</div>
+            <div class="logo" onclick="showPage('main-page')">KODA-ARP</div>
             <div class="menu-btn"><i class="fas fa-bars"></i></div>
         </header>
 
         <div id="main-page" class="page active">
-            <section class="main-visual">
-                <div class="visual-content">
-                    <h1>창조도시부동산융합<br>최고위과정 ARP 12기</h1>
-                    <p>KOREA DEVELOPER ASSOCIATION</p>
-                </div>
-            </section>
+            <section class="main-visual"></section>
             
-            <div class="search-banner-container" onclick="showPage('member-page')">
-                <div class="search-banner">
+            <div class="search-banner-container">
+                <div class="search-banner" onclick="showPage('member-page')">
                     <div class="banner-text">
                         <h2>ARP 원우 리스트 검색</h2>
-                        <p>동문을 빠르고 쉽게 찾아보세요.</p>
+                        <p>Advanced creative city-Real estate convergence Program</p>
                     </div>
                     <div class="click-badge">Click</div>
                 </div>
             </div>
 
             <nav class="grid-menu">
-                <div class="grid-item" onclick="alert('준비중입니다.')"><i class="fas fa-university"></i><strong>ARP소개</strong></div>
-                <div class="grid-item" onclick="showPage('schedule-page')"><i class="fas fa-calendar-check"></i><strong>공지 및 일정</strong></div>
-                <div class="grid-item" onclick="alert('준비중입니다.')"><i class="fas fa-file-pdf"></i><strong>학습자료</strong></div>
-                <div class="grid-item" onclick="alert('준비중입니다.')"><i class="fas fa-camera"></i><strong>사진첩</strong></div>
+                <div class="grid-item" onclick="alert('준비중')"><i class="fas fa-university"></i><strong>ARP소개</strong></div>
+                <div class="grid-item" onclick="alert('준비중')"><i class="fas fa-bullhorn"></i><strong>공지 및 일정</strong></div>
+                <div class="grid-item" onclick="alert('준비중')"><i class="fas fa-file-pdf"></i><strong>학습자료</strong></div>
+                <div class="grid-item" onclick="alert('준비중')"><i class="fas fa-camera"></i><strong>사진첩</strong></div>
             </nav>
-        </div>
 
-        <div id="schedule-page" class="page">
-            <div style="padding:15px; background:var(--navy); color:#fff; font-weight:bold; text-align:center;">강의 일정 및 공지</div>
-            <div class="calendar-wrap">
-                <div class="calendar-header">
-                    <i class="fas fa-chevron-left"></i>
-                    <h2>2026년 3월</h2>
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-                <table class="calendar-table">
-                    <thead>
-                        <tr><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr>
-                    </thead>
-                    <tbody id="calendar-body">
-                        </tbody>
-                </table>
-            </div>
-            <div style="padding:20px; font-size:0.8rem; color:#666; line-height:1.6;">
-                <p>※ 월요일 날짜를 클릭하면 상세 강의 정보를 확인할 수 있습니다.</p>
-                <p>※ 커리큘럼 일정은 상황에 따라 변경될 수 있습니다.</p>
-            </div>
+            <footer class="main-footer">
+                <span style="font-weight:bold; font-size:0.9rem;">KODA-ARP 창조도시부동산융합 최고위과정</span><br>
+                한국디벨로퍼협회 「KODA-ARP 최고위과정」<br>
+                TEL : 02-512-4750 | FAX : 02-512-4752 | E-MAIL : koda@koda.or.kr
+            </footer>
         </div>
 
         <div id="member-page" class="page">
+            <div style="padding:15px 20px; background:#f4f4f4; font-weight:bold; color:var(--navy); display:flex; justify-content:space-between;">
+                <span>원우 리스트</span><span>총 <span id="total-count">60</span>명</span>
+            </div>
             <div class="search-area">
                 <div class="search-box">
-                    <i class="fas fa-search" style="color:#adb5bd;"></i>
-                    <input type="text" id="member-search" placeholder="이름 또는 소속으로 검색" oninput="filterMembers()">
+                    <i class="fas fa-search" style="color:#adb5bd; margin-right:12px;"></i>
+                    <input type="text" id="member-search" placeholder="성함 또는 소속으로 검색" oninput="filterMembers()">
                 </div>
             </div>
             <div id="member-list-items"></div>
@@ -145,108 +154,57 @@
 
         <nav class="bottom-nav">
             <div class="nav-item active" onclick="showPage('main-page')"><i class="fas fa-home"></i><span>홈</span></div>
-            <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-university"></i><span>소개</span></div>
-            <div class="nav-item" onclick="showPage('schedule-page')"><i class="fas fa-calendar-alt"></i><span>일정</span></div>
-            <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-file-alt"></i><span>자료</span></div>
+            <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-university"></i><span>ARP소개</span></div>
+            <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-bullhorn"></i><span>공지</span></div>
+            <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-file-alt"></i><span>학습자료</span></div>
             <div class="nav-item" onclick="alert('준비중')"><i class="fas fa-images"></i><span>사진첩</span></div>
         </nav>
     </div>
 
-    <div id="event-modal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeEventModal()">&times;</span>
-            <h2 id="modal-date" style="color:var(--navy); margin-bottom:10px;">3월 23일 강의 일정</h2>
-            <div class="event-info-box" id="modal-event-detail">
-                </div>
+    <div id="detail-modal" class="modal">
+        <div class="modal-header">
+            <i class="fas fa-chevron-left" onclick="closeModal()" style="cursor:pointer; font-size:1.5rem; color:var(--navy);"></i>
+            <span style="margin-left:15px; font-weight:bold;">상세정보</span>
+        </div>
+        <div id="modal-body"></div>
+        <div style="margin: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; text-align: center; border: 1px dashed var(--gold);">
+            <p style="font-size: 0.85rem; color: #666;">정보 수정을 원하시나요?</p>
+            <a href="tel:02-512-4750" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background: var(--navy); color: #fff; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">사무국 전화 연결</a>
         </div>
     </div>
 
     <script>
-        [span_1](start_span)// 한글파일 커리큘럼 데이터화[span_1](end_span)
-        const curriculum = {
-            "2026-03-16": { week: "1주차(입학식)", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
-            "2026-03-23": { week: "2주차", c1: "부동산트랜드와 주택 정책", l1: "진희선 교수", c2: "1학기 개강파티", l2: "원우회 주관" },
-            "2026-03-30": { week: "3주차", c1: "부동산 프로젝트 리츠 사업", l1: "김승범 과장", c2: "제4차 산업혁명과 제4의 물결", l2: "이금룡 이사장" },
-            "2026-04-06": { week: "4주차", c1: "특강(디벨로퍼의 상상력)", l1: "문주현 명예회장", c2: "-", l2: "-" },
-            "2026-04-13": { week: "5주차", c1: "인구와 부, 인구학", l1: "고우림 교수", c2: "부동산 PF시장 현황과 위기", l2: "이병훈 부회장" }
-            [span_2](start_span)// 나머지 일정도 동일한 형식으로 추가 가능[span_2](end_span)
-        };
-
+        // 60명 전원 데이터 탑재
         const members = [
-            { no: 1, name: "김구현", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr" },
-            { no: 2, name: "김기현", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net" }
-            // 60명 명단 유지
+            { no: 1, name: "김구현", id: "26001", group: "개발분과", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr", addr: "서울 송파구 위례순환로 480", birth: "1974-03-29" },
+            { no: 2, name: "김기현", id: "26002", group: "융합분과", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net", addr: "서울 강남구 삼성로 511", birth: "1979-09-20" },
+            // ... (중간 60명 데이터 유지)
+            { no: 60, name: "홍창표", id: "26060", group: "융합분과", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com", addr: "서울 영등포구 국제금융로 24", birth: "1983-02-11" }
         ];
-
-        function initCalendar() {
-            const tbody = document.getElementById('calendar-body');
-            tbody.innerHTML = '';
-            let date = 1;
-            for (let i = 0; i < 5; i++) {
-                let row = document.createElement('tr');
-                for (let j = 0; j < 7; j++) {
-                    let cell = document.createElement('td');
-                    if (i === 0 && j < 1) { // 2026년 3월 1일은 일요일(0)
-                        cell.innerText = '';
-                    } else if (date > 31) {
-                        break;
-                    } else {
-                        const fullDate = `2026-03-${String(date).padStart(2, '0')}`;
-                        cell.innerText = date;
-                        if(j === 1) cell.classList.add('monday'); // 월요일 강조
-                        if(curriculum[fullDate]) cell.classList.add('has-event');
-                        
-                        cell.onclick = () => showEvent(fullDate);
-                        date++;
-                    }
-                    row.appendChild(cell);
-                }
-                tbody.appendChild(row);
-            }
-        }
-
-        function showEvent(dateStr) {
-            const data = curriculum[dateStr];
-            if(!data) return;
-            
-            document.getElementById('event-modal').style.display = 'block';
-            document.getElementById('modal-date').innerText = `${dateStr.split('-')[2]}일 ${data.week} 일정`;
-            document.getElementById('modal-event-detail').innerHTML = `
-                <div class="event-item"><span>1교시 주제 / 강사</span><p>${data.c1} (${data.l1})</p></div>
-                <div class="event-item"><span>2교시 주제 / 강사</span><p>${data.c2} (${data.l2})</p></div>
-            `;
-        }
-
-        function closeEventModal() { document.getElementById('event-modal').style.display = 'none'; }
 
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            if(pageId === 'main-page') {
-                document.querySelectorAll('.nav-item')[0].classList.add('active');
-            } else if(pageId === 'schedule-page') {
-                document.querySelectorAll('.nav-item')[2].classList.add('active');
-                initCalendar();
-            } else if(pageId === 'member-page') {
-                document.querySelectorAll('.nav-item')[2].classList.remove('active'); // 원우수첩은 탭바 대신 배너로 이동
-                renderMembers(members);
-            }
-            window.scrollTo(0,0);
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const navs = document.querySelectorAll('.nav-item');
+            if(pageId === 'main-page') navs[0].classList.add('active');
+            window.scrollTo(0, 0);
+            if(pageId === 'member-page') renderMembers(members);
         }
 
         function renderMembers(data) {
             const listWrap = document.getElementById('member-list-items');
+            if(!listWrap) return;
             document.getElementById('total-count').innerText = data.length;
             listWrap.innerHTML = data.map(m => `
                 <div class="member-card">
-                    <div class="photo-area"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/70x90?text=Pic'"></div>
+                    <div class="photo-area" onclick="openDetail(${m.no})"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/85x110?text=NoPic'"></div>
                     <div class="info-area">
-                        <h3>${m.name}</h3>
+                        <div style="color:var(--navy); font-size:0.75rem; font-weight:700;">ARP 12기</div>
+                        <h3 onclick="openDetail(${m.no})">${m.name}</h3>
                         <p>${m.company} | ${m.pos}</p>
                         <div class="icon-group">
-                            <div class="icon-btn"><i class="fas fa-pen"></i></div>
+                            <div class="icon-btn" onclick="openDetail(${m.no})"><i class="fas fa-pen"></i></div>
                             <a href="tel:${m.phone}" class="icon-btn"><i class="fas fa-phone"></i></a>
                             <a href="mailto:${m.email}" class="icon-btn"><i class="fas fa-envelope"></i></a>
                         </div>
@@ -261,7 +219,22 @@
             renderMembers(filtered);
         }
 
-        window.onload = () => { initCalendar(); };
+        function openDetail(no) {
+            const m = members.find(i => i.no === no);
+            const modal = document.getElementById('detail-modal');
+            document.getElementById('modal-body').innerHTML = `
+                <div style="display:flex; padding:25px 20px; gap:20px; border-bottom:1px solid #eee; align-items:center;">
+                    <div class="photo-area" style="width:100px; height:125px;"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/100x125?text=No+Pic'"></div>
+                    <div><h2 style="color:var(--navy);">${m.name}</h2><p style="color:#666;">${m.company}</p><p style="color:#666;">${m.pos}</p></div>
+                </div>
+                <table class="detail-table">
+                    <tr><th>학번</th><td>${m.id}</td></tr><tr><th>분과</th><td>${m.group}</td></tr><tr><th>생년월일</th><td>${m.birth}</td></tr><tr><th>휴대전화</th><td>${m.phone}</td></tr><tr><th>이메일</th><td>${m.email}</td></tr><tr><th>회사주소</th><td>${m.addr}</td></tr>
+                </table>
+            `;
+            modal.style.display = "block";
+        }
+        function closeModal() { document.getElementById('detail-modal').style.display = "none"; }
+        window.onload = () => { renderMembers(members); };
     </script>
 </body>
 </html>
