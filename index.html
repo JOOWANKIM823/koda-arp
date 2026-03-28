@@ -16,12 +16,12 @@
                 <h2>한국을 대표하는<br>글로벌 대학의 자부심</h2>
             </div>
         </header>
-        <div class="quick-menu-title">빠른메뉴 <span>QUICK MENU</span></div>
+        <div class="quick-menu-title">빠른메뉴 QUICK MENU</div>
         <nav class="main-nav">
-            <div class="menu-item" onclick="alert('준비중입니다')"><i>⭐</i>소개</div>
+            <div class="menu-item"><i>⭐</i>소개</div>
             <div class="menu-item" onclick="showPage('list-page')"><i>📇</i>회원수첩</div>
-            <div class="menu-item" onclick="alert('준비중입니다')"><i>📺</i>소식</div>
-            <div class="menu-item" onclick="alert('준비중입니다')"><i>📝</i>자유게시판</div>
+            <div class="menu-item"><i>📺</i>소식</div>
+            <div class="menu-item"><i>📝</i>자유게시판</div>
         </nav>
     </section>
 
@@ -30,16 +30,16 @@
             <button class="back-btn" onclick="showPage('home-page')">〈</button>
             <h1>12기 원우수첩</h1>
         </header>
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="이름 또는 회사 검색">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="이름 또는 회사를 검색하세요">
         </div>
-        <div class="member-grid" id="member-list"></div>
+        <main class="member-grid" id="member-list"></main>
     </section>
 
     <section id="detail-page" class="page">
         <header class="sub-header">
             <button class="back-btn" onclick="showPage('list-page')">〈</button>
-            <h1>원우리스트</h1>
+            <h1>원우 상세정보</h1>
         </header>
         <div id="member-detail-content"></div>
     </section>
