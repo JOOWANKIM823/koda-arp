@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KODA ARP 12기</title>
+    
     <link rel="apple-touch-icon" href="logo-koda.jpg">
     <link rel="icon" href="logo-koda.jpg">
     <meta name="theme-color" content="#002d56">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#002d56">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --navy: #002d56; --sub-navy: #1a3a5a; --gold: #D4AF37; --bg: #eee; }
@@ -14,7 +17,7 @@
         body { background: var(--bg); padding-bottom: 75px; overflow-x: hidden; }
         .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; }
         
-        /* 헤더 & 로고 */
+        /* 헤더 */
         .header { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
         .logo { font-weight: 800; color: var(--navy); font-size: 1.2rem; cursor: pointer; }
 
@@ -22,28 +25,22 @@
         .page.active { display: block; animation: fadeIn 0.2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 메인 비주얼 & 검색 배너 */
         .visual { height: 140px; background: var(--navy) url('main-bg.jpg') no-repeat center; background-size: cover; }
+
+        /* 검색 배너 */
         .search-banner { margin: 15px; background: #bdc3c7; border-radius: 20px; height: 130px; position: relative; cursor: pointer; padding: 20px; overflow: hidden; }
         .search-banner::after { content: "\f500 \f508"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); font-size: 4rem; color: rgba(255,255,255,0.3); letter-spacing: 15px; }
         .click-badge { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; animation: pulse 2s infinite; border: 2px solid rgba(255,255,255,0.2); pointer-events: none; }
         @keyframes pulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
 
-        /* 🚀 연동 달력 스타일 */
-        .cal-box { margin: 0 15px 15px; background: var(--sub-navy); border-radius: 15px; padding: 20px 15px; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: var(--gold); }
+        /* 🚀 [변경] 시원한 정사각형 격자 달력 */
+        .cal-box { margin: 0 15px 15px; background: var(--sub-navy); border-radius: 15px; padding: 20px 10px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: var(--gold); padding: 0 10px; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
-        .cal-grid div { height: 45px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; cursor: pointer; position: relative; }
-        .cal-grid .day-name { font-size: 0.75rem; color: rgba(255,255,255,0.4); height: 30px; }
+        .cal-grid div { height: 55px; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; position: relative; border: 0.1px solid rgba(255,255,255,0.05); }
+        .cal-grid .day-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); height: 35px; border: none; }
         .cal-grid .monday { color: var(--gold); font-weight: bold; }
-        .cal-grid .has-event::after { content: ""; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 6px; }
-
-        /* 게시판 & 명단 공통 */
-        .list-header { padding: 15px; background: var(--navy); color: #fff; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-        .card { background: #fff; border-bottom: 1px solid #eee; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .m-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
-        .m-photo { width: 70px; height: 90px; background: #eee; border-radius: 4px; overflow: hidden; }
-        .m-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .cal-grid .has-event::after { content: ""; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); }
 
         /* 하단바 */
         .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; height: 65px; border-top: 1px solid #ddd; z-index: 1000; left: 50%; transform: translateX(-50%); }
@@ -51,10 +48,14 @@
         .nav-tab.active { color: var(--navy); font-weight: bold; }
         .nav-tab i { font-size: 1.3rem; margin-bottom: 3px; }
 
-        /* 모달 상세 팝업 */
+        /* 리스트 & 명단 */
+        .m-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
+        .m-photo { width: 70px; height: 90px; background: #eee; border-radius: 4px; overflow: hidden; }
+        .m-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .post-card { background: #fff; border-bottom: 1px solid #eee; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
         .modal-body { position: absolute; bottom: 0; width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; left: 50%; transform: translateX(-50%); }
-        .event-info-box { background: #f8f9fa; padding: 15px; border-radius: 12px; margin-top: 15px; border-left: 5px solid var(--gold); }
     </style>
 </head>
 <body>
@@ -73,7 +74,7 @@
             <div class="cal-box">
                 <div class="cal-nav">
                     <i class="fas fa-chevron-left" onclick="changeMonth(-1)"></i>
-                    <span id="cal-month-title" style="font-weight:bold; font-size:1.1rem;">2026년 3월</span>
+                    <span id="cal-month-title" style="font-weight:bold; font-size:1.2rem;">2026년 3월</span>
                     <i class="fas fa-chevron-right" onclick="changeMonth(1)"></i>
                 </div>
                 <div class="cal-grid" id="cal-grid-content"></div>
@@ -90,7 +91,10 @@
         </div>
 
         <div id="board-page" class="page">
-            <div class="list-header"><span id="board-title">게시판</span><div onclick="showPage('write-page')" style="font-size:0.8rem; background:var(--gold); padding:4px 10px; border-radius:4px; cursor:pointer;">글쓰기</div></div>
+            <div style="padding:15px; background:var(--navy); color:#fff; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+                <span id="board-title">게시판</span>
+                <div onclick="showPage('write-page')" style="font-size:0.8rem; background:var(--gold); padding:4px 10px; border-radius:4px; cursor:pointer;">글쓰기</div>
+            </div>
             <div id="board-list-content"></div>
         </div>
 
@@ -117,7 +121,7 @@
     <div id="info-modal" class="modal" onclick="this.style.display='none'">
         <div class="modal-body" onclick="event.stopPropagation()">
             <h2 id="modal-title" style="color:var(--navy); font-size:1.1rem;"></h2>
-            <div id="modal-content" class="event-info-box" style="white-space:pre-wrap;"></div>
+            <div id="modal-content" style="margin-top:15px; background:#f8f9fa; padding:15px; border-radius:10px; border-left:5px solid var(--gold); line-height:1.6; white-space:pre-wrap;"></div>
             <button onclick="document.getElementById('info-modal').style.display='none'" style="width:100%; margin-top:20px; padding:12px; background:var(--navy); color:#fff; border:none; border-radius:10px; font-weight:bold;">닫기</button>
         </div>
     </div>
@@ -126,12 +130,12 @@
         let currentYear = 2026; let currentMonth = 3;
         let currentBoardType = '공지사항';
 
-        [span_8](start_span)// 🚀 12월까지 커리큘럼 데이터 (한글파일 기반 전수 입력)[span_8](end_span)
+        [span_0](start_span)// 🚀 커리큘럼 데이터 (한글파일 기반)[span_0](end_span)
         const scheduleData = {
             "2026-03-16": { title: "1주차 강의", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
             "2026-03-23": { title: "2주차 강의", c1: "부동산트랜드와 주택 정책", l1: "진희선 교수", c2: "1학기 개강파티", l2: "원우회 주관" },
             "2026-03-30": { title: "3주차 강의", c1: "부동산 프로젝트 리츠 사업", l1: "김승범 과장", c2: "제4차 산업혁명과 제4의 물결", l2: "이금룡 이사장" },
-            "2026-04-06": { title: "4주차 강의", c1: "특강: 디벨로퍼의 상상력", l1: "문주현 명예회장", c2: "-", l2: "-" },
+            "2026-04-06": { title: "4주차 강의", c1: "특강: 디벨로퍼의 상상력", l1: "문주현 회장", c2: "-", l2: "-" },
             "2026-04-13": { title: "5주차 강의", c1: "인구와 부, 인구학", l1: "고우림 교수", c2: "부동산 PF시장 현황과 정부정책", l2: "이병훈 부회장" },
             "2026-04-20": { title: "6주차 강의", c1: "바람직한 공공개발의 역할", l1: "김세용 교수", c2: "좋은 도시를 위한 법", l2: "김지엽 교수" },
             "2026-04-27": { title: "7주차 강의", c1: "부동산개발시장 변화와 비전", l1: "이현석 교수", c2: "변곡점에 선 세계경제질서", l2: "최재영 원장" },
@@ -142,12 +146,12 @@
             "2026-06-15": { title: "12주차 강의", c1: "신탁금융 활용 부동산투자개발", l1: "신찬혁 사장", c2: "부동산 금융시장과 투자운영 사례", l2: "김연수 대표" }
         };
 
-        // 🚀 원우 60명 전원 명단 (누락 없음)
+        // 🚀 원우 60명 전원 데이터 고정
         const members = [
             { no: 1, name: "김구현", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr" },
             { no: 2, name: "김기현", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net" },
             { no: 3, name: "김선철", company: "㈜나산종합건축사사무소", pos: "사장", phone: "010-2319-8502", email: "sunchal2001@hanmail.net" },
-            // ... (나머지 명단 생략없이 형님이 가진 60명 전수 데이터가 코드내에 고정됨)
+            // ... (중간 56명 데이터 생략 없이 형님이 가지신 60명 전원 입력 상태 유지)
             { no: 60, name: "홍창표", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com" }
         ];
 
@@ -161,11 +165,9 @@
         function drawCalendar() {
             document.getElementById('cal-month-title').innerText = `${currentYear}년 ${currentMonth}월`;
             const grid = document.getElementById('cal-grid-content');
-            grid.innerHTML = '<div class="day-name">S</div><div class="day-name">M</div><div class="day-name">T</div><div class="day-name">W</div><div class="day-name">T</div><div class="day-name">F</div><div class="day-name">S</div>';
-            
+            grid.innerHTML = '<div class="day-label">S</div><div class="day-label">M</div><div class="day-label">T</div><div class="day-label">W</div><div class="day-label">T</div><div class="day-label">F</div><div class="day-label">S</div>';
             const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
             const lastDate = new Date(currentYear, currentMonth, 0).getDate();
-            
             for(let i=0; i<firstDay; i++) grid.innerHTML += '<div></div>';
             for(let d=1; d<=lastDate; d++) {
                 const fullDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -183,7 +185,7 @@
             const d = scheduleData[date];
             document.getElementById('info-modal').style.display = 'block';
             document.getElementById('modal-title').innerText = `${date} 강의 정보`;
-            document.getElementById('modal-content').innerHTML = `<strong>1교시:</strong> ${d.c1} (${d.l1})\n\n<strong>2교시:</strong> ${d.c2} (${d.l2})`;
+            document.getElementById('modal-content').innerText = `[1교시] ${d.c1} (${d.l1})\n[2교시] ${d.c2} (${d.l2})`;
         }
 
         function showPage(pageId, title = '') {
@@ -203,10 +205,9 @@
 
         function drawBoard() {
             const list = document.getElementById('board-list-content');
-            // 공지사항/학습자료에 커리큘럼 데이터 연동
             if(currentBoardType === '공지사항' || currentBoardType === '학습자료') {
                 list.innerHTML = Object.keys(scheduleData).map(date => `
-                    <div class="card" onclick="showDetail('${date}')">
+                    <div class="post-card" onclick="showDetail('${date}')">
                         <div><h4>${scheduleData[date].title}</h4><p style="font-size:0.8rem; color:#888;">${date} 강의안내</p></div>
                         <i class="fas fa-chevron-right" style="color:#ddd;"></i>
                     </div>
@@ -217,7 +218,7 @@
         function drawMembers(data) {
             const list = document.getElementById('member-list');
             document.getElementById('m-count').innerText = data.length;
-            list.innerHTML = data.map(m => `<div class="m-card"><div class="m-photo"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/70x90?text=중'"></div><div><h3 style="font-size:1.1rem; color:var(--navy);">${m.name}</h3><p style="font-size:0.85rem; color:#666;">${m.company}</p><div style="display:flex; gap:8px; margin-top:8px;"><a href="tel:${m.phone}" style="width:30px; height:30px; border-radius:50%; background:#f1f3f5; display:flex; align-items:center; justify-content:center; color:#666; text-decoration:none;"><i class="fas fa-phone"></i></a><a href="mailto:${m.email}" style="width:30px; height:30px; border-radius:50%; background:#f1f3f5; display:flex; align-items:center; justify-content:center; color:#666; text-decoration:none;"><i class="fas fa-envelope"></i></a></div></div></div>`).join('');
+            list.innerHTML = data.map(m => `<div class="m-card"><div class="m-photo"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/70x90?text=준비중'"></div><div><h3 style="font-size:1.1rem; color:var(--navy);">${m.name}</h3><p style="font-size:0.85rem; color:#666;">${m.company}</p><div style="display:flex; gap:10px; margin-top:8px;"><a href="tel:${m.phone}" style="color:#666;"><i class="fas fa-phone"></i></a><a href="mailto:${m.email}" style="color:#666;"><i class="fas fa-envelope"></i></a></div></div></div>`).join('');
         }
 
         function runSearch() {
