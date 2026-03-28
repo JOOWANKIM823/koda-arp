@@ -1,4 +1,4 @@
-// 1. KODA ARP 12기 전체 명단 데이터 (수정 사항 및 상세 정보 반영)
+// 1. KODA ARP 12기 전체 명단 (수정 사항 반영 완료)
 const members = [
     { id: "26001", name: "김구현", company: "케이알산업", pos: "상무", group: "창조분과", phone: "010-9401-8700", email: "kimkh@krindus.co.kr", addr: "서울 송파구 위례순환로 480", birth: "1974-03-29", img: "" },
     { id: "26002", name: "김기현", company: "코람코자산신탁", pos: "이사", group: "개발분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
@@ -27,7 +27,7 @@ const members = [
     { id: "26025", name: "박승옥", company: "육송㈜", pos: "회장", group: "창조분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
     { id: "26026", name: "박옥진", company: "마롬커뮤니케이션", pos: "기획이사", group: "융합분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
     { id: "26027", name: "박준형", company: "국토교통부", pos: "전역정책관", group: "개발분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
-    { id: "26028", company: "㈜씨에이파트너스", name: "박홍주", pos: "대표이사", group: "도시분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
+    { id: "26028", name: "박홍주", company: "㈜씨에이파트너스", pos: "대표이사", group: "도시분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
     { id: "26029", name: "방유진", company: "BNY멜론 투자자문", pos: "대표이사", group: "융합분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
     { id: "26030", name: "백승준", company: "㈜원진엔지니어링", pos: "대표이사", group: "창조분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
     { id: "26031", name: "송철한", company: "㈜스페이스에코", pos: "대표이사", group: "개발분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" },
@@ -62,17 +62,17 @@ const members = [
     { id: "26060", name: "홍창표", company: "유진투자증권", pos: "담당", group: "창조분과", phone: "010-0000-0000", email: "", addr: "", birth: "", img: "" }
 ];
 
-// 2. 페이지 전환 함수
+// 2. 페이지 전환 기능
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const targetPage = document.getElementById(pageId);
-    if(targetPage) targetPage.classList.add('active');
+    const target = document.getElementById(pageId);
+    if(target) target.classList.add('active');
     
     // 리스트 페이지로 이동 시 전체 명단 렌더링
     if(pageId === 'list-page') renderMembers(members);
 }
 
-// 3. 명단 렌더링 함수
+// 3. 명단 리스트 렌더링
 function renderMembers(data) {
     const listDiv = document.getElementById('member-list');
     if(!listDiv) return;
@@ -81,7 +81,7 @@ function renderMembers(data) {
     data.forEach(m => {
         const card = document.createElement('div');
         card.className = 'card';
-        card.onclick = () => showDetail(m.id);
+        card.onclick = () => showDetail(m.id); // 모든 원우 클릭 시 상세페이지 이동
         card.innerHTML = `
             <div class="card-img">
                 ${m.img ? `<img src="${m.img}" onerror="this.parentElement.innerHTML='PHOTO'">` : 'PHOTO'}
@@ -97,7 +97,7 @@ function renderMembers(data) {
     });
 }
 
-// 4. 상세 페이지 출력 함수
+// 4. 상세 정보 출력
 function showDetail(id) {
     const m = members.find(item => item.id === id);
     if(!m) return;
@@ -111,10 +111,10 @@ function showDetail(id) {
                 <div class="detail-photo">
                     ${m.img ? `<img src="${m.img}" onerror="this.style.display='none'">` : ''}
                 </div>
-                <div>
-                    <div style="color:#007bff; font-size:0.8rem; font-weight:bold;">ARP 12기</div>
-                    <div style="font-size:1.6rem; font-weight:800; margin:5px 0; color:#333;">${m.name}</div>
-                    <div style="color:#666; font-size:0.95rem;">${m.company} | ${m.pos}</div>
+                <div class="header-info">
+                    <div class="unit">ARP 12기</div>
+                    <div class="main-name">${m.name}</div>
+                    <div class="sub-info">${m.company} | ${m.pos}</div>
                 </div>
             </div>
             <table class="detail-table">
@@ -131,7 +131,7 @@ function showDetail(id) {
     showPage('detail-page');
 }
 
-// 5. 검색 및 필터링 기능
+// 5. 실시간 검색 기능
 document.getElementById('search-input')?.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
     const filtered = members.filter(m => 
@@ -141,7 +141,5 @@ document.getElementById('search-input')?.addEventListener('input', (e) => {
     renderMembers(filtered);
 });
 
-// 6. 초기 로드
-window.onload = () => {
-    showPage('home-page');
-};
+// 6. 초기 로드 시 홈 페이지 표시
+window.onload = () => showPage('home-page');
