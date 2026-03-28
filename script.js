@@ -1,4 +1,4 @@
-// 60명 원우 전체 데이터베이스
+// 60명 원우 전체 데이터베이스 (형님이 제공하신 최신 데이터)
 const members = [
     { no: 1, name: "김구현", id: "26001", group: "개발분과", field: "시공", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr", addr: "서울 송파구 위례순환로 480" },
     { no: 2, name: "김기현", id: "26002", group: "융합분과", field: "금융", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net", addr: "서울 강남구 삼성로 511" },
@@ -62,19 +62,16 @@ const members = [
     { no: 60, name: "홍창표", id: "26060", group: "도시분과", field: "금융", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com", addr: "서울 영등포구 국제금융로 24" }
 ];
 
-// 리스트 그리기 함수 (사진 + 전체 상세 정보 연결)
+// 화면 그리기 함수
 function renderMembers(data) {
     const listWrap = document.getElementById('member-list-items');
     listWrap.innerHTML = data.map((m) => `
         <li class="member-card" onclick="openDetail(${m.no})">
             <div class="card-left">
-                <div class="profile-img-area">
-                    <img src="img/${m.name}.jpg" alt="${m.name}" onerror="this.src='https://via.placeholder.com/55x55?text=No+Pic'">
-                </div>
                 <div class="m-info">
                     <div class="name-tag"><strong>${m.name}</strong> <span class="batch-badge">${m.id}</span></div>
                     <p class="company">${m.company}</p>
-                    <p class="position">${m.pos} | ${m.field}</p>
+                    <p class="position">${m.pos} | ${m.group}</p>
                 </div>
             </div>
             <div class="card-right">
@@ -84,30 +81,26 @@ function renderMembers(data) {
     `).join('');
 }
 
-// 상세 정보 팝업 열기
+// 상세 정보 팝업
 function openDetail(no) {
     const m = members.find(item => item.no === no);
-    const body = document.getElementById('modal-body');
-    body.innerHTML = `
-        <div class="modal-header">
-            <img src="img/${m.name}.jpg" class="modal-profile-img" onerror="this.src='https://via.placeholder.com/100x100?text=No+Pic'">
-            <h3>${m.name} 원우님</h3>
-        </div>
-        <div class="detail-item"><label>학번</label><span>${m.id}</span></div>
-        <div class="detail-item"><label>분과 / 분야</label><span>${m.group} / ${m.field}</span></div>
-        <div class="detail-item"><label>소속 / 직위</label><span>${m.company} / ${m.pos}</span></div>
-        <div class="detail-item"><label>휴대전화</label><span>${m.phone}</span></div>
-        <div class="detail-item"><label>이메일</label><span>${m.email}</span></div>
-        <div class="detail-item"><label>회사주소</label><span>${m.addr}</span></div>
-    `;
-    document.getElementById('member-detail-modal').style.display = 'block';
+    alert(`[원우 상세정보]\n\n성함: ${m.name}\n소속: ${m.company}\n직위: ${m.pos}\n이메일: ${m.email}\n주소: ${m.addr}`);
 }
 
-function closeModal() {
-    document.getElementById('member-detail-modal').style.display = 'none';
+// 검색 기능 연결
+document.getElementById('member-search')?.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+    const filtered = members.filter(m => m.name.includes(val) || m.company.includes(val));
+    renderMembers(filtered);
+});
+
+// 페이지 전환
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    if(pageId === 'member-page') renderMembers(members);
 }
 
-// 초기 실행
 window.onload = () => {
     renderMembers(members);
 };
