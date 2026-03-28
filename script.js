@@ -1,4 +1,4 @@
-// KODA ARP 12기 60명 전체 데이터베이스
+// KODA ARP 12기 60명 원우 전체 데이터베이스
 const members = [
     { no: 1, name: "김구현", id: "26001", group: "개발분과", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr", addr: "서울 송파구 위례순환로 480", birth: "1974-03-29" },
     { no: 2, name: "김기현", id: "26002", group: "융합분과", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net", addr: "서울 강남구 삼성로 511", birth: "1979-09-20" },
@@ -17,7 +17,7 @@ const members = [
     { no: 15, name: "김태훈", id: "26015", group: "도시분과", company: "우암건설 주식회사", pos: "사업본부장", phone: "010-5430-0430", email: "kimth@wooamcon.co.kr", addr: "서울 강남구 학동로 306", birth: "1968-06-09" },
     { no: 16, name: "김평", id: "26016", group: "도시분과", company: "주식회사 신안디앤씨", pos: "대표이사", phone: "010-7437-7474", email: "shinan7373@naver.com", addr: "서울 강남구 테헤란로 512", birth: "1975-01-17" },
     { no: 17, name: "김학성", id: "26017", group: "개발분과", company: "㈜성현이앤씨", pos: "대표이사", phone: "010-9251-9005", email: "asadap@naver.com", addr: "서울 성동구 연무장11길 22", birth: "1958-07-11" },
-    { no: 18, name: "남은오", id: "26018", group: "창조분과", company: "㈜태정종합건설", pos: "대표이사", phone: "010-2608-3654", email: "tj5136@hanmail.net", addr: "서울 송파구 송파대로 201", birth: "1970-11-04" },
+    { no: 18, name: "남은오", id: "26018", group: "창조분과", company: "㈜태정종합건축", pos: "대표이사", phone: "010-2608-3654", email: "tj5136@hanmail.net", addr: "서울 송파구 송파대로 201", birth: "1970-11-04" },
     { no: 19, name: "노거희", id: "26019", group: "융합분과", company: "주식회사 마리디앤씨", pos: "대표이사", phone: "010-4282-9550", email: "nhhoux@naver.com", addr: "서울 강남구 선릉로 604", birth: "1978-01-28" },
     { no: 20, name: "노원수", id: "26020", group: "도시분과", company: "㈜에이치엠", pos: "전무", phone: "010-4174-1470", email: "enemy9980@naver.com", addr: "서울 강남구 역삼로 413", birth: "1980-07-03" },
     { no: 21, name: "도종광", id: "26021", group: "융합분과", company: "한국인프라컨설팅", pos: "부문대표", phone: "010-9155-7314", email: "jkdoh@kifas.co.kr", addr: "서울 마포구 마포대로 12", birth: "1970-06-15" },
@@ -62,47 +62,43 @@ const members = [
     { no: 60, name: "홍창표", id: "26060", group: "융합분과", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com", addr: "서울 영등포구 국제금융로 24", birth: "1983-02-11" }
 ];
 
+// 화면에 리스트 그리기
 function renderMembers(data) {
     const listWrap = document.getElementById('member-list-items');
+    if(!listWrap) return;
+    
     document.getElementById('total-count').innerText = data.length;
     
     listWrap.innerHTML = data.map(m => `
         <li class="member-card" onclick="openDetail(${m.no})">
             <div class="photo-area">
-                <img src="img/${m.name}.jpg" onerror="this.src='https://via.placeholder.com/90x110?text=사진준비중'">
+                <img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/90x110?text=No+Pic'">
             </div>
             <div class="info-area">
-                <p class="batch-label">ARP 12기</p>
-                <div class="name-line">
-                    <h3>${m.name.split('').join(' ')}</h3>
-                    <div class="btn-group">
-                        <div class="circle-btn"><i class="far fa-calendar-alt"></i></div>
-                        <div class="circle-btn"><i class="fas fa-pencil-alt"></i></div>
-                        <a href="tel:${m.phone}" class="circle-btn" onclick="event.stopPropagation()"><i class="fas fa-phone"></i></a>
-                        <a href="mailto:${m.email}" class="circle-btn" onclick="event.stopPropagation()"><i class="far fa-envelope"></i></a>
-                    </div>
-                </div>
-                <p class="company-line">${m.company} <span>|</span> ${m.pos}</p>
+                <p style="color:#003a72; font-size:0.8rem; font-weight:700;">ARP 12기</p>
+                <h3 style="letter-spacing: 2px;">${m.name}</h3>
+                <p style="font-size:0.9rem; color:#666;">${m.company} | ${m.pos}</p>
             </div>
         </li>
     `).join('');
 }
 
+// 상세 팝업 열기
 function openDetail(no) {
     const m = members.find(i => i.no === no);
     const modal = document.getElementById('detail-modal');
-    const body = document.getElementById('modal-body');
-    
-    body.innerHTML = `
+    if(!modal) return;
+
+    document.getElementById('modal-body').innerHTML = `
         <div style="text-align:center; margin-bottom:20px;">
-            <img src="img/${m.name}.jpg" style="width:120px; border:1px solid #ddd; border-radius:4px;" onerror="this.src='https://via.placeholder.com/120?text=사진없음'">
-            <h2 style="margin-top:10px; color:#D4AF37;">${m.name} 원우님</h2>
+            <img src="${m.name}.jpg" style="width:130px; border-radius:8px; border:1px solid #ddd;" onerror="this.src='https://via.placeholder.com/130?text=No+Pic'">
+            <h2 style="margin-top:15px; color:#D4AF37;">${m.name} 원우님</h2>
         </div>
         <table class="detail-table">
-            <tr><th>기수 / 학번</th><td>12기 / ${m.id}</td></tr>
+            <tr><th>학번</th><td>${m.id}</td></tr>
             <tr><th>분과</th><td>${m.group}</td></tr>
             <tr><th>생년월일</th><td>${m.birth}</td></tr>
-            <tr><th>휴대전화</th><td><a href="tel:${m.phone}" style="color:#03C75A; font-weight:bold;">${m.phone}</a></td></tr>
+            <tr><th>휴대전화</th><td><a href="tel:${m.phone}" style="color:#03C75A; font-weight:bold; text-decoration:none;">${m.phone}</a></td></tr>
             <tr><th>이메일</th><td>${m.email}</td></tr>
             <tr><th>회사주소</th><td>${m.addr}</td></tr>
         </table>
@@ -110,19 +106,26 @@ function openDetail(no) {
     modal.style.display = "block";
 }
 
-function closeModal() { document.getElementById('detail-modal').style.display = "none"; }
-
-document.getElementById('member-search')?.addEventListener('input', (e) => {
-    const val = e.target.value.toLowerCase();
-    renderMembers(members.filter(m => m.name.includes(val) || m.company.includes(val)));
-});
-
-// 모달 외부 클릭 시 닫기
-window.onclick = function(event) {
-    const modal = document.getElementById('detail-modal');
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+// 모달 닫기
+function closeModal() {
+    document.getElementById('detail-modal').style.display = "none";
 }
 
-window.onload = () => renderMembers(members);
+// 페이지 전환
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    if(pageId === 'member-page') renderMembers(members);
+}
+
+// 검색 기능
+document.getElementById('member-search')?.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+    const filtered = members.filter(m => m.name.includes(val) || m.company.includes(val));
+    renderMembers(filtered);
+});
+
+// 초기 실행
+window.onload = () => {
+    renderMembers(members);
+};
