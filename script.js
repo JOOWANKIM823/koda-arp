@@ -1,4 +1,3 @@
-// 1. KODA ARP 12기 60명 전체 명단 (박준형 직위 및 오타 수정 완료)
 const members = [
     { id: "26001", name: "김구현", company: "케이알산업", pos: "상무", group: "창조분과", phone: "010-9401-8700", email: "kimkh@krindus.co.kr", addr: "서울 송파구 위례순환로 480", birth: "1974-03-29" },
     { id: "26002", name: "김기현", company: "코람코자산신탁", pos: "이사", group: "개발분과", phone: "010-0000-0000", email: "", addr: "", birth: "" },
@@ -62,20 +61,26 @@ const members = [
     { id: "26060", name: "홍창표", company: "유진투자증권", pos: "담당", group: "창조분과", phone: "010-4240-3382", email: "cp.hong@eugenefn.com", addr: "서울 영등포구 국제금융로 24", birth: "1971-04-18" }
 ];
 
-// 2. 페이지 전환 함수
 function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
+    const target = document.getElementById(pageId);
+    if(target) target.classList.add('active');
     if(pageId === 'list-page') renderMembers(members);
 }
 
-// 3. 명단 렌더링 함수
 function renderMembers(data) {
     const listDiv = document.getElementById('member-list');
-    listDiv.innerHTML = data.map(m => `
-        <div class="card" onclick="showDetail('${m.id}')">
+    if(!listDiv) return;
+    listDiv.innerHTML = '';
+    data.forEach(m => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => showDetail(m.id);
+        // 현재 사진 파일들이 루트(최상위) 폴더에 있으므로 이름.jpg로 직접 호출합니다.
+        const imagePath = `${m.name}.jpg`; 
+        card.innerHTML = `
             <div class="card-img">
-                <img src="images/${m.name}.jpg" onerror="this.parentElement.innerHTML='PHOTO'">
+                <img src="${imagePath}" alt="${m.name}" onerror="this.parentElement.innerHTML='PHOTO'" style="width:100%; height:100%; object-fit:cover;">
             </div>
             <div class="card-info">
                 <div class="group">${m.group}</div>
@@ -83,20 +88,21 @@ function renderMembers(data) {
                 <div class="company">${m.company}</div>
                 <div class="pos">${m.pos}</div>
             </div>
-        </div>
-    `).join('');
+        `;
+        listDiv.appendChild(card);
+    });
 }
 
-// 4. 상세 페이지 출력 함수
 function showDetail(id) {
     const m = members.find(item => item.id === id);
     if(!m) return;
     const detailContent = document.getElementById('member-detail-content');
+    if(!detailContent) return;
     detailContent.innerHTML = `
         <div class="detail-box">
             <div class="detail-header">
                 <div class="detail-photo">
-                    <img src="images/${m.name}.jpg" onerror="this.src=''">
+                    <img src="${m.name}.jpg" onerror="this.style.display='none'">
                 </div>
                 <div>
                     <div style="color:blue; font-size:0.75rem;">ARP 12기</div>
@@ -118,15 +124,10 @@ function showDetail(id) {
     showPage('detail-page');
 }
 
-// 5. 실시간 검색 기능
 document.getElementById('search-input')?.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
-    const filtered = members.filter(m => 
-        m.name.toLowerCase().includes(val) || 
-        m.company.toLowerCase().includes(val)
-    );
+    const filtered = members.filter(m => m.name.includes(val) || m.company.includes(val));
     renderMembers(filtered);
 });
 
-// 6. 초기 로드
 window.onload = () => showPage('home-page');
