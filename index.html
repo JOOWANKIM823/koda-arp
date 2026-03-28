@@ -3,26 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KODA ARP 12기 원우수첩</title>
+    <title>KODA ARP 12기</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
 </head>
 <body>
-    <header>
-        <h1>KODA ARP 12기</h1>
-        <p>MEMBERS DIRECTORY</p>
-    </header>
+    <section id="home-page" class="page active">
+        <header class="main-header">
+            <div class="logo">MU:E NOTE</div>
+            <div class="hero-text">
+                <p>MU:E NOTE COMPANY</p>
+                <h2>한국을 대표하는<br>글로벌 대학의 자부심</h2>
+            </div>
+        </header>
+        <div class="quick-menu-title">빠른메뉴 <span>QUICK MENU</span></div>
+        <nav class="main-nav">
+            <div class="menu-item" onclick="alert('준비중입니다')"><i>⭐</i>소개</div>
+            <div class="menu-item" onclick="showPage('list-page')"><i>📇</i>회원수첩</div>
+            <div class="menu-item" onclick="alert('준비중입니다')"><i>📺</i>소식</div>
+            <div class="menu-item" onclick="alert('준비중입니다')"><i>📝</i>자유게시판</div>
+        </nav>
+    </section>
 
-    <nav class="filter-bar">
-        <button class="active" onclick="filterSelection('all')">전체</button>
-        <button onclick="filterSelection('창조')">창조</button>
-        <button onclick="filterSelection('개발')">개발</button>
-        <button onclick="filterSelection('융합')">융합</button>
-        <button onclick="filterSelection('도시')">도시</button>
-    </nav>
+    <section id="list-page" class="page">
+        <header class="sub-header">
+            <button class="back-btn" onclick="showPage('home-page')">〈</button>
+            <h1>12기 원우수첩</h1>
+        </header>
+        <div class="filter-bar">
+            <input type="text" id="search-input" placeholder="이름 또는 회사 검색">
+        </div>
+        <div class="member-grid" id="member-list"></div>
+    </section>
 
-    <main class="member-grid" id="memberList">
-        </main>
+    <section id="detail-page" class="page">
+        <header class="sub-header">
+            <button class="back-btn" onclick="showPage('list-page')">〈</button>
+            <h1>원우리스트</h1>
+        </header>
+        <div id="member-detail-content"></div>
+    </section>
 
     <script src="script.js"></script>
 </body>
