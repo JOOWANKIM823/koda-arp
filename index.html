@@ -9,64 +9,52 @@
 </head>
 <body>
     <div class="app-container">
-        <header>
-            <div class="logo">KODA ARP</div>
-            <div class="header-right">
-                <span>로그인</span>
-                <div class="menu-btn" id="menu-open">
-                    <span></span><span></span><span></span>
+        <div id="main-page" class="page active">
+            <header>
+                <div class="logo">KODA ARP</div>
+                <div class="header-right">
+                    <span>로그인</span>
+                    <div class="menu-btn"><span></span><span></span><span></span></div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <section class="main-visual">
-            <div class="visual-text">
-                <p>KODA ARP 최고위과정</p>
-                <h1>대한민국을 대표하는<br>부동산 전문가의 자부심</h1>
-            </div>
-            <div class="side-tabs">
-                <div class="tab">맞춤형 ▶</div>
-                <div class="tab active">메인1</div>
-                <div class="tab">메인2</div>
-                <div class="tab">메인3</div>
-            </div>
-        </section>
+            <section class="main-visual">
+                <div class="visual-text">
+                    <p>KODA ARP 최고위과정</p>
+                    <h1>대한민국을 대표하는<br>부동산 전문가의 자부심</h1>
+                </div>
+            </section>
 
-        <section class="quick-banner">
-            <div class="triangle"></div>
-            <h3>빠른메뉴</h3>
-            <p>QUICK MENU</p>
-        </section>
+            <section class="quick-banner"><h3>빠른메뉴 QUICK MENU</h3></section>
 
-        <nav class="grid-menu">
-            <div class="grid-item">
-                <i class="far fa-star"></i>
-                <strong>소개</strong>
-                <span>ABOUT</span>
-            </div>
-            <div class="grid-item">
-                <i class="far fa-id-card"></i>
-                <strong>원우수첩</strong>
-                <span>MOBILE NOTE</span>
-            </div>
-            <div class="grid-item">
-                <i class="far fa-newspaper"></i>
-                <strong>소식</strong>
-                <span>NEWS</span>
-            </div>
-            <div class="grid-item">
-                <i class="fas fa-edit"></i>
-                <strong>자유게시판</strong>
-                <span>FREE BOARD</span>
-            </div>
-        </nav>
+            <nav class="grid-menu">
+                <div class="grid-item" onclick="showPage('member-page')">
+                    <i class="far fa-id-card"></i>
+                    <strong>원우수첩</strong>
+                    <span>MOBILE NOTE</span>
+                </div>
+                </nav>
+        </div>
 
-        <div class="floating-area">
-            <div class="f-btn yellow"><i class="fas fa-phone"></i> 전화문의</div>
-            <div class="f-btn dark"><i class="fas fa-home"></i> 홈페이지</div>
+        <div id="member-page" class="page">
+            <header class="sub-header">
+                <button onclick="showPage('main-page')" class="back-btn"><i class="fas fa-arrow-left"></i></button>
+                <h2>원우수첩</h2>
+            </header>
+            <div class="search-box">
+                <input type="text" placeholder="원우 이름을 검색하세요">
+            </div>
+            <ul class="member-list">
+                <li class="member-item">
+                    <div class="m-info">
+                        <strong>김주완 원우</strong>
+                        <span>12기 | KODA 협회</span>
+                    </div>
+                    <a href="tel:01000000000" class="call-btn"><i class="fas fa-phone"></i></a>
+                </li>
+                </ul>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
