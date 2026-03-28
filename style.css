@@ -1,42 +1,54 @@
 :root { --main-blue: #003a72; --gold: #D4AF37; --bg: #f8f9fa; }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
 body { background: #eee; }
-.app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; }
+.app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; }
 
-.page { display: none; }
-.page.active { display: block; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+/* 페이지 전환 애니메이션 */
+.page { display: none; min-height: 80vh; }
+.page.active { display: block; animation: slideIn 0.3s ease-out; }
+@keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
 /* 헤더 */
 .main-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #ddd; background: #fff; position: sticky; top:0; z-index:100; }
-.logo { font-weight: bold; color: var(--main-blue); font-size: 1.2rem; cursor: pointer; }
+.logo { font-weight: bold; color: var(--main-blue); font-size: 1.2rem; cursor: pointer; letter-spacing: -0.5px; }
+.menu-btn { color: var(--main-blue); font-size: 1.2rem; cursor: pointer; }
 
-/* 메인 비주얼 */
-.main-visual { height: 220px; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab') center/cover; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; }
-.visual-text h1 { font-size: 1.4rem; margin-top: 5px; line-height: 1.3; }
+/* 메인 비주얼 & 그리드 메뉴 */
+.main-visual { height: 230px; background-size: cover; background-position: center; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; }
+.visual-text h1 { font-size: 1.6rem; margin-top: 8px; line-height: 1.3; font-weight: 700; }
+.visual-text p { font-size: 0.9rem; opacity: 0.9; letter-spacing: 1px; }
 
-/* 그리드 메뉴 */
-.grid-menu { display: grid; grid-template-columns: 1fr 1fr; background: #fff; }
-.grid-item { padding: 35px 20px; text-align: center; border: 0.5px solid #f0f0f0; cursor: pointer; }
-.grid-item i { font-size: 2rem; color: var(--gold); margin-bottom: 10px; display: block; }
+.grid-menu { display: grid; grid-template-columns: 1fr 1fr; background: #f0f0f0; }
+.grid-item { padding: 40px 20px; text-align: center; border: 0.5px solid rgba(255,255,255,0.2); cursor: pointer; transition: 0.2s; background-size: cover; background-position: center; position: relative; color: #fff; }
+.grid-item:active { transform: scale(0.98); }
+.grid-item i { font-size: 2.2rem; color: var(--gold); margin-bottom: 12px; display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.grid-item strong { display: block; font-size: 1rem; margin-bottom: 4px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.grid-item span { font-size: 0.7rem; opacity: 0.9; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
 
-/* 리스트 스타일 */
-.page-title { padding: 15px; background: #f4f4f4; font-size: 1.1rem; font-weight: bold; border-bottom: 3px solid var(--main-blue); }
-.search-section { padding: 10px; background: #fff; }
-.search-section input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; outline: none; background: #fafafa; }
-.member-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; cursor: pointer; }
-.photo-area { width: 85px; height: 105px; border: 1px solid #ddd; overflow: hidden; flex-shrink: 0; }
+/* 원우 리스트 스타일 */
+.page-title { padding: 15px; background: #f4f4f4; font-size: 1.1rem; font-weight: bold; border-bottom: 3px solid var(--main-blue); color: #333; }
+.page-title span { color: #888; font-size: 0.85rem; margin-left: 10px; font-weight: normal; }
+.search-section { padding: 15px; background: #fff; border-bottom: 1px solid #eee; }
+.search-bar { background: #f1f3f5; padding: 10px 15px; border-radius: 8px; display: flex; align-items: center; }
+.search-bar i { color: #adb5bd; margin-right: 10px; }
+.search-bar input { border: none; background: none; outline: none; width: 100%; font-size: 0.95rem; }
+
+.member-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
+.member-card:active { background: #f8f9fa; }
+.photo-area { width: 85px; height: 110px; border: 1px solid #ddd; overflow: hidden; flex-shrink: 0; border-radius: 4px; background: #f0f0f0; }
 .photo-area img { width: 100%; height: 100%; object-fit: cover; }
-.info-area h3 { font-size: 1.1rem; letter-spacing: 1px; color: #222; }
+.info-area h3 { font-size: 1.15rem; color: #222; margin-bottom: 6px; letter-spacing: 1.5px; }
+.info-area p { font-size: 0.85rem; color: #666; }
 
-/* 상세 정보 테이블 */
-.detail-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-.detail-table th { background: #f9f9f9; padding: 10px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; width: 35%; color: #666; }
-.detail-table td { padding: 10px; border: 1px solid #eee; font-size: 0.85rem; color: #333; }
-
-/* 모달 */
+/* 상세 팝업 테이블 스타일 (영상 스타일 재현) */
 .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-.modal-content { background: #fff; margin: 10% auto; padding: 20px; width: 90%; border-radius: 10px; }
-.modal-header-box { display: flex; justify-content: space-between; border-bottom: 2px solid var(--main-blue); padding-bottom: 10px; margin-bottom: 15px; }
+.modal-content { background: #fff; margin: 10% auto; padding: 25px; width: 92%; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+.modal-header-box { display: flex; justify-content: space-between; border-bottom: 2px solid var(--main-blue); padding-bottom: 12px; margin-bottom: 20px; align-items: center; }
+.modal-title { font-weight: bold; color: var(--main-blue); font-size: 1.1rem; }
+.close-icon { font-size: 1.4rem; color: #999; cursor: pointer; }
 
-.main-footer { background: #333; color: #888; padding: 20px; text-align: center; font-size: 0.75rem; }
+.detail-table { width: 100%; border-collapse: collapse; }
+.detail-table th { background: #f8f9fa; padding: 12px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; width: 35%; color: #555; }
+.detail-table td { padding: 12px; border: 1px solid #eee; font-size: 0.85rem; color: #222; font-weight: 500; }
+
+.main-footer { background: #333; color: #aaa; padding: 30px 20px; text-align: center; font-size: 0.75rem; }

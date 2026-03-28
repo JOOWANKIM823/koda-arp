@@ -1,4 +1,4 @@
-// KODA ARP 12기 60명 원우 전체 데이터베이스 (중략 없음)
+// KODA ARP 12기 60명 원우 전체 데이터베이스
 const members = [
     { no: 1, name: "김구현", id: "26001", group: "개발분과", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr", addr: "서울 송파구 위례순환로 480", birth: "1974-03-29" },
     { no: 2, name: "김기현", id: "26002", group: "융합분과", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net", addr: "서울 강남구 삼성로 511", birth: "1979-09-20" },
@@ -62,6 +62,15 @@ const members = [
     { no: 60, name: "홍창표", id: "26060", group: "융합분과", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com", addr: "서울 영등포구 국제금융로 24", birth: "1983-02-11" }
 ];
 
+// 페이지 전환 함수 (3단계 완벽 지원)
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    window.scrollTo(0, 0); 
+    if(pageId === 'member-page') renderMembers(members);
+}
+
+// 리스트 렌더링
 function renderMembers(data) {
     const listWrap = document.getElementById('member-list-items');
     if(!listWrap) return;
@@ -69,24 +78,25 @@ function renderMembers(data) {
     listWrap.innerHTML = data.map(m => `
         <li class="member-card" onclick="openDetail(${m.no})">
             <div class="photo-area">
-                <img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/85x105?text=No+Pic'">
+                <img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/85x110?text=사진준비중'">
             </div>
             <div class="info-area">
-                <p style="color:#003a72; font-size:0.75rem; font-weight:bold;">ARP 12기</p>
-                <h3 style="letter-spacing: 2px; margin: 3px 0;">${m.name}</h3>
-                <p style="font-size:0.85rem; color:#666;">${m.company} | ${m.pos}</p>
+                <p style="color:#003a72; font-size:0.75rem; font-weight:700;">ARP 12기</p>
+                <h3 style="letter-spacing: 1.5px; margin: 3px 0;">${m.name}</h3>
+                <p>${m.company} <span>|</span> ${m.pos}</p>
             </div>
         </li>
     `).join('');
 }
 
+// 상세 팝업 열기
 function openDetail(no) {
     const m = members.find(i => i.no === no);
     const modal = document.getElementById('detail-modal');
     document.getElementById('modal-body').innerHTML = `
-        <div style="text-align:center; margin-bottom:20px;">
-            <img src="${m.name}.jpg" style="width:130px; border-radius:8px; border:1px solid #ddd;" onerror="this.src='https://via.placeholder.com/130x150?text=No+Pic'">
-            <h2 style="margin-top:15px; color:#003a72;">${m.name} 원우님</h2>
+        <div style="text-align:center; margin-bottom:25px;">
+            <img src="${m.name}.jpg" style="width:130px; border-radius:8px; border:1px solid #ddd; box-shadow:0 5px 15px rgba(0,0,0,0.1);" onerror="this.src='https://via.placeholder.com/130x160?text=사진없음'">
+            <h2 style="margin-top:15px; color:#003a72; letter-spacing:3px;">${m.name} 원우님</h2>
         </div>
         <table class="detail-table" style="width:100%; border-collapse:collapse;">
             <tr><th style="background:#f9f9f9; padding:10px; border:1px solid #eee; text-align:left; width:35%;">학번</th><td style="padding:10px; border:1px solid #eee;">${m.id}</td></tr>
@@ -101,15 +111,15 @@ function openDetail(no) {
 }
 
 function closeModal() { document.getElementById('detail-modal').style.display = "none"; }
-function showPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    if(pageId === 'member-page') renderMembers(members);
-}
 
+// 검색 기능
 document.getElementById('member-search')?.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
     renderMembers(members.filter(m => m.name.includes(val) || m.company.includes(val)));
 });
 
+// 외부 클릭 시 모달 닫기
+window.onclick = (e) => { if (e.target == document.getElementById('detail-modal')) closeModal(); }
+
+// 초기화
 window.onload = () => { if(document.getElementById('member-list-items')) renderMembers(members); };

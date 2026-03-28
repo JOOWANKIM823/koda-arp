@@ -15,31 +15,42 @@
         </header>
 
         <div id="main-page" class="page active">
-            <section class="main-visual">
+            <section class="main-visual" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('main-bg.jpg');">
                 <div class="visual-text">
                     <p>한국부동산개발협회</p>
                     <h1>창조도시부동산융합<br>최고위과정(ARP)</h1>
                 </div>
             </section>
             <nav class="grid-menu">
-                <div class="grid-item" onclick="showPage('member-page')">
+                <div class="grid-item item-member" onclick="showPage('member-page')" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('thumb-member.jpg');">
                     <i class="far fa-id-card"></i>
-                    <strong>원우회</strong>
+                    <strong>원우수첩</strong>
                     <span>MOBILE NOTE</span>
                 </div>
-                <div class="grid-item"><i class="far fa-images"></i><strong>사진첩</strong><span>ALBUM</span></div>
-                <div class="grid-item"><i class="far fa-calendar-alt"></i><strong>행사일정</strong><span>CALENDAR</span></div>
-                <div class="grid-item"><i class="fas fa-bullhorn"></i><strong>공지사항</strong><span>NOTICE</span></div>
+                <div class="grid-item item-board" onclick="alert('준비 중입니다.')" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('thumb-board.jpg');">
+                    <i class="far fa-images"></i>
+                    <strong>게시판 & 사진첩</strong>
+                    <span>BOARD & ALBUM</span>
+                </div>
+                <div class="grid-item item-notice" onclick="alert('준비 중입니다.')" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('thumb-notice.jpg');">
+                    <i class="fas fa-bullhorn"></i>
+                    <strong>공지 및 일정</strong>
+                    <span>NOTICE</span>
+                </div>
             </nav>
         </div>
 
         <div id="member-page" class="page">
             <div class="page-title">원우회 <span>12기 리스트</span></div>
             <div class="search-section">
-                <input type="text" id="member-search" placeholder="성함 또는 소속 검색">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="member-search" placeholder="성함 또는 소속 검색">
+                </div>
             </div>
             <div class="member-container">
-                <ul id="member-list-items" class="member-list"></ul>
+                <ul id="member-list-items" class="member-list">
+                    </ul>
             </div>
         </div>
 
@@ -55,7 +66,7 @@
         <div class="modal-content">
             <div class="modal-header-box">
                 <span class="modal-title">원우 상세정보</span>
-                <i class="fas fa-times" onclick="closeModal()"></i>
+                <i class="fas fa-times close-icon" onclick="closeModal()"></i>
             </div>
             <div id="modal-body"></div>
         </div>
