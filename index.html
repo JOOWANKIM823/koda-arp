@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KODA ARP 12기</title>
     
-    <link rel="apple-touch-icon" href="logo-koda.png">
-    <link rel="icon" href="logo-koda.png">
-    <meta name="theme-color" content="#002d56">
+    <link rel="apple-touch-icon" href="logo-koda.jpg">
+    <link rel="icon" href="logo-koda.jpg">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#002d56">
+    <meta name="theme-color" content="#002d56">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -26,7 +27,7 @@
 
         .visual { height: 150px; background: var(--navy) url('main-bg.jpg') no-repeat center; background-size: cover; }
 
-        /* 검색 배너 (남녀 양복 실루엣) */
+        /* 검색 배너 */
         .search-banner { margin: 15px; background: var(--bg-gray); border-radius: 20px; height: 130px; position: relative; cursor: pointer; padding: 20px; overflow: hidden; }
         .search-banner::after { content: "\f500 \f508"; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); font-size: 4rem; color: rgba(255,255,255,0.3); letter-spacing: 15px; }
         .click-badge { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: var(--navy); color: #fff; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; animation: pulse 2s infinite; border: 2px solid rgba(255,255,255,0.2); z-index: 10; pointer-events: none; }
@@ -51,7 +52,7 @@
         .write-btn { padding: 5px 12px; background: var(--gold); color: #fff; border-radius: 5px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
         .post-card { background: #fff; border-bottom: 1px solid #eee; padding: 15px; display: flex; justify-content: space-between; cursor: pointer; }
 
-        /* 원우 리스트 (60명) */
+        /* 원우 리스트 (60명 고정) */
         .m-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
         .m-photo { width: 70px; height: 90px; background: #eee; border-radius: 4px; overflow: hidden; }
         .m-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -73,7 +74,7 @@
     <div class="app-container">
         <header class="header">
             <div class="logo" onclick="showPage('main-page')">KODA-ARP</div>
-            <div class="menu-btn" onclick="alert('전체 메뉴 및 글쓰기 준비중')"><i class="fas fa-bars"></i></div>
+            <div class="menu-btn" onclick="alert('전체 메뉴 준비중')"><i class="fas fa-bars"></i></div>
         </header>
 
         <div id="main-page" class="page active">
@@ -82,7 +83,6 @@
                 <h2 style="color:var(--navy);">ARP 원우 리스트 검색</h2>
                 <div class="click-badge">Click</div>
             </div>
-
             <div class="cal-box">
                 <div class="cal-nav">
                     <i class="fas fa-chevron-left" onclick="changeMonth(-1)"></i>
@@ -91,16 +91,15 @@
                 </div>
                 <div class="cal-grid" id="cal-grid-content"></div>
             </div>
-
             <nav class="grid-menu">
                 <div class="grid-item" onclick="alert('ARP소개 준비중')"><i class="fas fa-university"></i><strong>ARP소개</strong></div>
                 <div class="grid-item" onclick="showPage('board-page', '공지사항')"><i class="fas fa-bullhorn"></i><strong>공지사항</strong></div>
                 <div class="grid-item" onclick="showPage('board-page', '학습자료')"><i class="fas fa-file-pdf"></i><strong>학습자료</strong></div>
                 <div class="grid-item" onclick="showPage('board-page', '사진첩')"><i class="fas fa-camera"></i><strong>사진첩</strong></div>
             </nav>
-
             <footer style="padding:25px 20px; background:var(--navy); color:#fff; font-size:0.7rem; line-height:1.6;">
                 <span style="font-weight:bold;">KODA-ARP 창조도시부동산융합 최고위과정</span><br>
+                한국디벨로퍼협회 「KODA-ARP 최고위과정」<br>
                 TEL : 02-512-4750 | E-MAIL : koda@koda.or.kr
             </footer>
         </div>
@@ -144,7 +143,7 @@
     <script>
         let currentYear = 2026; let currentMonth = 3;
 
-        // 🚀 커리큘럼 데이터 (주신 파일 기반)
+        // 🚀 커리큘럼 데이터 (전체 12주차)
         const schedule = {
             "2026-03-16": { title: "1주차 강의", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
             "2026-03-23": { title: "2주차 강의", c1: "부동산트랜드와 주택 정책", l1: "진희선 교수", c2: "1학기 개강파티", l2: "원우회 주관" },
@@ -160,7 +159,7 @@
             "2026-06-15": { title: "12주차 강의", c1: "신탁금융 활용 부동산투자개발", l1: "신찬혁 사장", c2: "부동산 금융시장과 투자운영 사례", l2: "김연수 대표" }
         };
 
-        // 🚀 원우 60명 전원 고정 데이터 (누락 없음)
+        // 🚀 원우 60명 전원 데이터 고정
         const members = [
             { no: 1, name: "김구현", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr" },
             { no: 2, name: "김기현", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net" },
@@ -281,7 +280,7 @@
         function drawMembers(data) {
             const list = document.getElementById('member-list');
             document.getElementById('m-count').innerText = data.length;
-            list.innerHTML = data.map(m => `<div class="m-card"><div class="m-photo"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/70x90?text=사진중'"></div><div><h3 style="font-size:1.1rem; color:var(--navy);">${m.name}</h3><p style="font-size:0.85rem; color:#666;">${m.company}</p><div class="m-btns"><div class="m-btn" onclick="alert('사무국 문의 바랍니다.')"><i class="fas fa-pen"></i></div><a href="tel:${m.phone}" class="m-btn"><i class="fas fa-phone"></i></a><a href="mailto:${m.email}" class="m-btn"><i class="fas fa-envelope"></i></a></div></div></div>`).join('');
+            list.innerHTML = data.map(m => `<div class="m-card"><div class="m-photo"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/70x90?text=준비중'"></div><div><h3 style="font-size:1.1rem; color:var(--navy);">${m.name}</h3><p style="font-size:0.85rem; color:#666;">${m.company}</p><div class="m-btns"><div class="m-btn" onclick="alert('사무국 문의 바랍니다.')"><i class="fas fa-pen"></i></div><a href="tel:${m.phone}" class="m-btn"><i class="fas fa-phone"></i></a><a href="mailto:${m.email}" class="m-btn"><i class="fas fa-envelope"></i></a></div></div></div>`).join('');
         }
 
         function runSearch() {
