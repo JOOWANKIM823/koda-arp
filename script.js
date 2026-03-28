@@ -1,8 +1,10 @@
-function showPage(pageId) {
-    // 모든 페이지 숨기기
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    // 선택한 페이지 보여주기
-    document.getElementById(pageId).classList.add('active');
-}
+// 리스트 그리기 함수 (사진 추가 버전)
+function renderMembers(data) {
+    const listWrap = document.getElementById('member-list-items');
+    listWrap.innerHTML = data.map((m) => `
+        <li class="member-card" onclick="openDetail(${m.no})">
+            <div class="card-left">
+                <div class="profile-img-area">
+                    <img src="img/${m.name}.jpg" alt="${m.name}" onerror="this.src='https://via.placeholder.com/50x50?text=No+Pic'">
+                </div>
+                <div class="m-in
