@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KODA ARP 12기</title>
-    <link rel="stylesheet" href="스타일.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* [여기에 스타일을 다 합쳤습니다 - 경로 꼬일 일 없음] */
+        :root { --main-blue: #003a72; --gold: #D4AF37; --bg: #f8f9fa; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Noto Sans KR', sans-serif; }
+        body { background: #eee; }
+        .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; overflow-x: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+        .page { display: none; min-height: 80vh; }
+        .page.active { display: block; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .main-header { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #ddd; background: #fff; position: sticky; top:0; z-index:100; }
+        .logo { font-weight: bold; color: var(--main-blue); font-size: 1.2rem; cursor: pointer; }
+        .main-visual { height: 230px; background-size: cover; background-position: center; color: #fff; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; }
+        .visual-text h1 { font-size: 1.6rem; margin-top: 8px; line-height: 1.3; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); }
+        .grid-menu { display: grid; grid-template-columns: 1fr 1fr; background: #f0f0f0; }
+        .grid-item { padding: 45px 20px; text-align: center; border: 0.5px solid rgba(255,255,255,0.3); cursor: pointer; background-size: cover; background-position: center; color: #fff; position: relative; }
+        .grid-item::before { content: ""; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); z-index: 1; }
+        .grid-item * { position: relative; z-index: 2; }
+        .grid-item i { font-size: 2.2rem; color: var(--gold); margin-bottom: 12px; display: block; }
+        .grid-item strong { display: block; font-size: 1.1rem; margin-bottom: 4px; }
+        .page-title { padding: 15px; background: #f4f4f4; font-size: 1.1rem; font-weight: bold; border-bottom: 3px solid var(--main-blue); }
+        .search-section { padding: 15px; background: #fff; }
+        .search-bar { background: #f1f3f5; padding: 10px 15px; border-radius: 8px; display: flex; align-items: center; }
+        .search-bar input { border: none; background: none; outline: none; width: 100%; margin-left: 10px; }
+        .member-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; cursor: pointer; }
+        .photo-area { width: 85px; height: 110px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #f0f0f0; }
+        .photo-area img { width: 100%; height: 100%; object-fit: cover; }
+        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
+        .modal-content { background: #fff; margin: 10% auto; padding: 25px; width: 92%; border-radius: 12px; }
+        .modal-header-box { display: flex; justify-content: space-between; border-bottom: 2px solid var(--main-blue); padding-bottom: 12px; margin-bottom: 20px; }
+        .detail-table { width: 100%; border-collapse: collapse; }
+        .detail-table th { background: #f8f9fa; padding: 10px; border: 1px solid #eee; text-align: left; font-size: 0.85rem; width: 35%; }
+        .detail-table td { padding: 10px; border: 1px solid #eee; font-size: 0.85rem; }
+        .main-footer { background: #333; color: #aaa; padding: 30px 20px; text-align: center; font-size: 0.75rem; }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -15,27 +48,21 @@
         </header>
 
         <div id="main-page" class="page active">
-            <section class="main-visual" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('main-bg.jpg');">
+            <section class="main-visual" style="background-image: url('Main-bg.jpg');">
                 <div class="visual-text">
                     <p>한국부동산개발협회</p>
                     <h1>창조도시부동산융합<br>최고위과정(ARP)</h1>
                 </div>
             </section>
             <nav class="grid-menu">
-                <div class="grid-item item-member" onclick="showPage('member-page')" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('thumb-member.jpg');">
-                    <i class="far fa-id-card"></i>
-                    <strong>원우수첩</strong>
-                    <span>MOBILE NOTE</span>
+                <div class="grid-item" onclick="showPage('member-page')" style="background-image: url('thumb-member.jpg');">
+                    <i class="far fa-id-card"></i><strong>원우수첩</strong><span>MOBILE NOTE</span>
                 </div>
-                <div class="grid-item item-board" onclick="alert('준비 중입니다.')" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('thumb-board.jpg');">
-                    <i class="far fa-images"></i>
-                    <strong>게시판 & 사진첩</strong>
-                    <span>BOARD & ALBUM</span>
+                <div class="grid-item" style="background-image: url('thumb-board.jpg');">
+                    <i class="far fa-images"></i><strong>게시판 & 사진첩</strong><span>BOARD & ALBUM</span>
                 </div>
-                <div class="grid-item item-notice" onclick="alert('준비 중입니다.')" style="background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('thumb-notice.jpg');">
-                    <i class="fas fa-bullhorn"></i>
-                    <strong>공지 및 일정</strong>
-                    <span>NOTICE</span>
+                <div class="grid-item" style="background-image: url('thumb-notice.jpg');">
+                    <i class="fas fa-bullhorn"></i><strong>공지 및 일정</strong><span>NOTICE</span>
                 </div>
             </nav>
         </div>
@@ -43,35 +70,23 @@
         <div id="member-page" class="page">
             <div class="page-title">원우회 <span>12기 리스트</span></div>
             <div class="search-section">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="member-search" placeholder="성함 또는 소속 검색">
-                </div>
+                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="member-search" placeholder="성함 또는 소속 검색"></div>
             </div>
-            <div class="member-container">
-                <ul id="member-list-items" class="member-list">
-                    </ul>
-            </div>
+            <ul id="member-list-items" class="member-list"></ul>
         </div>
 
         <footer class="main-footer">
-            <div class="footer-info">
-                <strong>KODA-ARP 최고위과정</strong><br>
-                TEL: 02-512-4750 | FAX: 02-512-4752
-            </div>
+            <strong>KODA-ARP 최고위과정</strong><br>TEL: 02-512-4750 | FAX: 02-512-4752
         </footer>
     </div>
 
     <div id="detail-modal" class="modal">
         <div class="modal-content">
-            <div class="modal-header-box">
-                <span class="modal-title">원우 상세정보</span>
-                <i class="fas fa-times close-icon" onclick="closeModal()"></i>
-            </div>
+            <div class="modal-header-box"><span style="font-weight:bold; color:var(--main-blue);">원우 상세정보</span><i class="fas fa-times" onclick="closeModal()" style="cursor:pointer;"></i></div>
             <div id="modal-body"></div>
         </div>
     </div>
 
-    <script src="스크립트.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
