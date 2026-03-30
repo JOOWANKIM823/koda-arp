@@ -23,16 +23,18 @@
         .page.active { display: block; animation: fadeIn 0.2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 🚀 메인 배경 이미지 복구 */
-        .visual { height: 140px; background: var(--navy) url('main-bg.jpg') no-repeat center; background-size: cover; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; padding: 0 20px; }
+        /* 🚀 메인 배경 이미지 (글씨 삭제) */
+        .visual { height: 160px; background: var(--navy) url('main-bg.jpg') no-repeat center; background-size: cover; }
 
-        .cal-box { margin: 15px; background: var(--sub-navy); border-radius: 15px; padding: 15px 10px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: var(--gold); padding: 0 5px; }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; width: 100%; gap: 1px; }
-        .cal-grid div { aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; cursor: pointer; position: relative; min-height: 45px; }
-        .cal-grid .day-label { aspect-ratio: auto; height: 30px; font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+        /* 🚀 달력 세련되고 콤팩트하게 변경 */
+        .cal-box { margin: 15px; background: var(--navy); border-radius: 12px; padding: 15px 10px; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: var(--gold); padding: 0 10px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; gap: 2px; }
+        .cal-grid div { height: 35px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; cursor: pointer; position: relative; border-radius: 6px; }
+        .cal-grid .day-label { height: 25px; font-size: 0.7rem; color: rgba(255,255,255,0.5); }
         .cal-grid .monday { color: var(--gold); font-weight: bold; }
-        .cal-grid .has-event::after { content: ""; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); }
+        .cal-grid .has-event { background: rgba(255,255,255,0.1); font-weight: bold; }
+        .cal-grid .has-event::after { content: ""; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); }
 
         .grid-menu { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #ddd; }
         .grid-item { height: 100px; background: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; }
@@ -58,7 +60,6 @@
         .nav-tab.active { color: var(--navy); font-weight: bold; }
         .nav-tab i { font-size: 1.35rem; margin-bottom: 3px; }
 
-        /* 🚀 팝업 모달 최적화 */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
         .modal-body { position: absolute; bottom: 0; width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; left: 50%; transform: translateX(-50%); max-height: 85vh; overflow-y: auto; }
     </style>
@@ -71,9 +72,8 @@
         </header>
 
         <div id="main-page" class="page active">
-            <div class="visual">
-                <h3 style="font-size: 0.95rem; line-height: 1.5; background:rgba(0,45,86,0.6); padding:10px 20px; border-radius:10px;">창조도시부동산융합 최고위 과정 (12기)<br>한국디벨로퍼협회</h3>
-            </div>
+            <div class="visual"></div>
+            
             <div class="cal-box">
                 <div class="cal-nav">
                     <i class="fas fa-chevron-left" onclick="changeMonth(-1)"></i>
@@ -159,7 +159,6 @@
         let currentBoard = '공지사항';
         let selectedId = null;
 
-        // 🚀 일정 데이터 (커리큘럼)
         const curriculum = {
             "2026-03-16": { title: "입학식", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
             "2026-03-23": { title: "2주차 강의", c1: "부동산트랜드와 주택 정책", l1: "진희선 연세대 교수", c2: "1학기 개강파티", l2: "원우회 주관" },
@@ -176,7 +175,6 @@
             "2026-09-07": { title: "특강", c1: "공간개발 뉴노멀과 대응전략", l1: "김승배 명예회장", c2: "-", l2: "-" }
         };
 
-        // 🚀 원우 상세 데이터 (공식 홈페이지 양식 완벽 반영)
         const members = [
             {no:1, name:"김구현", branch:"개발분과", field:"시공", company:"케이알산업", pos:"상무", phone:"010-9401-8700", email:"kimkh@krindus.co.kr", tel:"02-6984-9250", c_addr:"(05814) 서울 송파구 위례순환로 480 , KR산업 위례빌딩"},
             {no:2, name:"김기현", branch:"융합분과", field:"금융", company:"코람코자산신탁", pos:"이사", phone:"010-8591-3971", email:"escoba@hanmail.net", tel:"02-787-0234", c_addr:"(06158) 서울 강남구 삼성로 511 , 3층"},
@@ -275,7 +273,6 @@
                 const div = document.createElement('div');
                 if(new Date(currentYear, currentMonth - 1, d).getDay() === 1) div.className = 'monday';
                 
-                // 🚀 달력 클릭 시 팝업 띄우기 복구
                 if(event) { 
                     div.classList.add('has-event'); 
                     div.onclick = () => showCurriculumDetail(fullDate); 
@@ -285,7 +282,6 @@
             }
         }
 
-        // 🚀 달력 팝업 전용 함수
         function showCurriculumDetail(date) {
             const d = curriculum[date];
             document.getElementById('detail-modal').style.display = 'block';
@@ -310,7 +306,6 @@
             `).join('');
         }
 
-        // 🚀 원우 상세 팝업 전용 함수 (공식 홈페이지 스타일)
         function showMemberDetail(no) {
             const m = members.find(x => x.no === no);
             document.getElementById('detail-modal').style.display = 'block';
@@ -339,7 +334,6 @@
             document.getElementById('modal-action-btns').style.display = 'none';
         }
 
-        // 🚀 게시판 리스트 그리기
         function drawBoard() {
             const list = document.getElementById('board-list-content');
             let posts = getDB().filter(p => p.board === currentBoard);
@@ -364,7 +358,6 @@
             }
         }
 
-        // 🚀 게시판 상세 팝업 전용 함수
         function showBoardDetail(id) {
             const p = getDB().find(i => i.id == id);
             selectedId = id;
