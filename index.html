@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KODA ARP 12기</title>
-    
-    <link rel="apple-touch-icon" href="logo-koda.jpg">
-    <link rel="icon" href="logo-koda.jpg">
-    <meta name="theme-color" content="#002d56">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#002d56">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --navy: #002d56; --sub-navy: #1a3a5a; --gold: #D4AF37; --bg: #f5f5f5; }
@@ -17,40 +11,44 @@
         body { background: var(--bg); padding-bottom: 75px; overflow-x: hidden; }
         .app-container { max-width: 500px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; }
         
-        .header { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
-        .logo { font-weight: 800; color: var(--navy); font-size: 1.2rem; cursor: pointer; }
+        /* 헤더 로고 확대 */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid var(--navy); background: #fff; position: sticky; top:0; z-index:100; }
+        .logo { font-weight: 900; color: var(--navy); font-size: 1.6rem; cursor: pointer; letter-spacing: -1px; }
 
         .page { display: none; padding-bottom: 30px; }
         .page.active { display: block; animation: fadeIn 0.2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 🚀 사진첩 전용 갤러리 그리드 스타일 */
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; }
-        .gallery-item { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid #eee; }
-        .gallery-thumb { width: 100%; aspect-ratio: 1 / 1; background: #f0f0f0; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .gallery-thumb i { font-size: 2.5rem; color: #ddd; }
-        .gallery-info { padding: 10px; }
-        .gallery-info h4 { font-size: 0.9rem; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .gallery-info p { font-size: 0.75rem; color: #999; margin-top: 4px; }
-
-        /* 공통 스타일 유지 */
-        .cal-box { margin: 15px; background: var(--sub-navy); border-radius: 15px; padding: 15px 5px; color: #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; border-top: 1px solid rgba(255,255,255,0.1); border-left: 1px solid rgba(255,255,255,0.1); }
-        .cal-grid div { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 1rem; border-right: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; }
+        /* 달력 접힘 방지 및 정사각형 고정 */
+        .cal-box { margin: 15px; background: var(--sub-navy); border-radius: 15px; padding: 15px 10px; color: #fff; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; width: 100%; gap: 1px; }
+        .cal-grid div { 
+            aspect-ratio: 1 / 1; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 0.95rem; cursor: pointer; position: relative;
+            min-height: 45px; /* 세로 찌그러짐 방지 */
+        }
+        .cal-grid .day-label { aspect-ratio: auto; height: 30px; font-size: 0.7rem; color: rgba(255,255,255,0.4); }
         .cal-grid .monday { color: var(--gold); font-weight: bold; }
-        .cal-grid .has-event::after { content: ""; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); }
+        .cal-grid .has-event::after { content: ""; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); }
 
+        /* 원우 명단 카드 */
+        .m-card { display: flex; padding: 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
+        .m-photo { width: 75px; height: 95px; background: #eee; border-radius: 6px; overflow: hidden; border: 1px solid #ddd; }
+        .m-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .m-info { flex: 1; }
+        .m-info h3 { font-size: 1.1rem; color: var(--navy); }
+        .m-btns { display: flex; gap: 10px; margin-top: 5px; }
+        .m-btn { width: 34px; height: 34px; background: #f1f3f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #555; text-decoration: none; border: 1px solid #e0e0e0; }
+
+        /* 하단 탭바 */
         .nav-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; height: 65px; border-top: 1px solid #ddd; z-index: 1000; left: 50%; transform: translateX(-50%); }
         .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #888; font-size: 0.65rem; cursor: pointer; }
         .nav-tab.active { color: var(--navy); font-weight: bold; }
-        .nav-tab i { font-size: 1.3rem; margin-bottom: 3px; }
+        .nav-tab i { font-size: 1.35rem; margin-bottom: 3px; }
 
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-        .modal-body { position: absolute; bottom: 0; width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; left: 50%; transform: translateX(-50%); max-height: 90vh; overflow-y: auto; }
-        .modal-body img { width: 100%; border-radius: 12px; margin-bottom: 15px; }
-
-        .post-card { background: #fff; border-bottom: 1px solid #eee; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+        .modal-body { position: absolute; bottom: 0; width: 100%; max-width: 500px; background: #fff; border-top-left-radius: 25px; border-top-right-radius: 25px; padding: 25px; left: 50%; transform: translateX(-50%); }
     </style>
 </head>
 <body>
@@ -61,58 +59,42 @@
         </header>
 
         <div id="main-page" class="page active">
-            <div class="visual" style="height:140px; background:var(--navy) url('main-bg.jpg') no-repeat center; background-size:cover;"></div>
+            <div style="height:110px; background:var(--navy); display:flex; align-items:center; justify-content:center; color:#fff; text-align:center; padding:0 20px;">
+                <h3 style="font-size:0.85rem; line-height:1.4;">창조도시부동산융합 최고위 과정 (12기)<br>한국디벨로퍼협회</h3>
+            </div>
             <div class="cal-box">
-                <div class="cal-nav" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; color:var(--gold); padding:0 10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; color:var(--gold); padding:0 5px;">
                     <i class="fas fa-chevron-left" onclick="changeMonth(-1)"></i>
-                    <span id="cal-month-title" style="font-weight:bold; font-size:1.2rem;">2026년 3월</span>
+                    <span id="cal-month-title" style="font-weight:bold;">2026년 3월</span>
                     <i class="fas fa-chevron-right" onclick="changeMonth(1)"></i>
                 </div>
                 <div class="cal-grid" id="cal-grid-content"></div>
             </div>
             <nav style="display:grid; grid-template-columns:1fr 1fr; background:#ddd; gap:1px;">
-                <div style="height:110px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;" onclick="alert('준비중')"><i class="fas fa-university" style="font-size:1.8rem; color:var(--gold); margin-bottom:8px;"></i><strong>ARP소개</strong></div>
-                <div style="height:110px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;" onclick="showPage('board-page', '공지사항')"><i class="fas fa-bullhorn" style="font-size:1.8rem; color:var(--gold); margin-bottom:8px;"></i><strong>공지사항</strong></div>
-                <div style="height:110px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;" onclick="showPage('board-page', '학습자료')"><i class="fas fa-file-pdf" style="font-size:1.8rem; color:var(--gold); margin-bottom:8px;"></i><strong>학습자료</strong></div>
-                <div style="height:110px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center; cursor:pointer;" onclick="showPage('board-page', '사진첩')"><i class="fas fa-camera" style="font-size:1.8rem; color:var(--gold); margin-bottom:8px;"></i><strong>사진첩</strong></div>
+                <div style="height:100px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center;" onclick="alert('준비중')"><i class="fas fa-university" style="color:var(--gold); font-size:1.6rem; margin-bottom:6px;"></i><strong>ARP소개</strong></div>
+                <div style="height:100px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center;" onclick="showPage('board-page', '공지사항')"><i class="fas fa-bullhorn" style="color:var(--gold); font-size:1.6rem; margin-bottom:6px;"></i><strong>공지사항</strong></div>
+                <div style="height:100px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center;" onclick="showPage('board-page', '학습자료')"><i class="fas fa-file-pdf" style="color:var(--gold); font-size:1.6rem; margin-bottom:6px;"></i><strong>학습자료</strong></div>
+                <div style="height:100px; background:#fff; display:flex; flex-direction:column; justify-content:center; align-items:center;" onclick="showPage('board-page', '사진첩')"><i class="fas fa-camera" style="color:var(--gold); font-size:1.6rem; margin-bottom:6px;"></i><strong>사진첩</strong></div>
             </nav>
-            <footer style="padding:25px; background:var(--navy); color:#fff; font-size:0.7rem; line-height:1.6; text-align:center;">
-                KODA-ARP 최고위과정 12기 | TEL : 02-512-4750
-            </footer>
+        </div>
+
+        <div id="member-page" class="page">
+            <div style="padding:15px; background:#fff; border-bottom:4px solid var(--gold); position:sticky; top:62px; z-index:90;">
+                <div style="background:#f1f3f5; padding:10px; border-radius:30px; display:flex; align-items:center;">
+                    <i class="fas fa-search" style="margin-right:10px; color:#aaa;"></i>
+                    <input type="text" id="m-search" placeholder="성함 또는 소속 검색" oninput="runSearch()" style="border:none; background:none; outline:none; width:100%;">
+                </div>
+                <div style="margin-top:10px; font-size:0.85rem; font-weight:bold; color:var(--navy);">원우 리스트 총 <span id="m-count">60</span>명</div>
+            </div>
+            <div id="member-list"></div>
         </div>
 
         <div id="board-page" class="page">
             <div style="padding:15px; background:var(--navy); color:#fff; display:flex; justify-content:space-between; align-items:center;">
                 <span id="board-title">게시판</span>
-                <div onclick="openWrite()" style="font-size:0.8rem; background:var(--gold); padding:4px 10px; border-radius:4px; cursor:pointer;">글쓰기</div>
+                <div onclick="openWrite()" style="font-size:0.8rem; background:var(--gold); padding:4px 10px; border-radius:4px;">글쓰기</div>
             </div>
             <div id="board-list-content"></div>
-        </div>
-
-        <div id="member-page" class="page">
-            <div style="padding:15px; background:#fff; border-bottom:4px solid var(--gold); position:sticky; top:52px; z-index:90;">
-                <div style="background:#f1f3f5; padding:10px; border-radius:30px; display:flex; align-items:center;">
-                    <i class="fas fa-search" style="margin-right:10px; color:#aaa;"></i>
-                    <input type="text" id="m-search" placeholder="성함 또는 소속 검색" oninput="runSearch()" style="border:none; background:none; outline:none; width:100%;">
-                </div>
-                <div style="margin-top:10px; font-size:0.85rem; font-weight:bold; color:var(--navy);">총 <span id="m-count">60</span>명</div>
-            </div>
-            <div id="member-list"></div>
-        </div>
-
-        <div id="write-page" class="page">
-            <div style="padding:15px; background:var(--navy); color:#fff; display:flex; justify-content:space-between; align-items:center;">
-                <span id="write-title">등록하기</span>
-                <div onclick="savePost()" style="font-size:0.8rem; background:var(--gold); padding:4px 10px; border-radius:4px; cursor:pointer;">저장</div>
-            </div>
-            <div style="padding:20px;">
-                <input type="text" id="post-subject" placeholder="제목을 입력하세요." style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px;">
-                <textarea id="post-content" placeholder="내용을 입력하세요." style="width:100%; height:150px; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:8px; resize:none;"></textarea>
-                <div style="background:#f8f9fa; padding:15px; border-radius:8px; border:1px dashed #ccc; text-align:center; color:#666;">
-                    <i class="fas fa-paperclip"></i> 파일명 입력 (예: 1주차 강의자료.pdf / 활동사진.jpg)<br>
-                    <input type="text" id="file-name-input" placeholder="정확한 파일명 입력" style="width:100%; padding:10px; margin-top:10px; border:1px solid #ddd; border-radius:5px;">
-                </div>
-            </div>
         </div>
 
         <nav class="nav-bar">
@@ -124,121 +106,131 @@
         </nav>
     </div>
 
-    <div id="detail-modal" class="modal" onclick="this.style.display='none'">
-        <div class="modal-body" onclick="event.stopPropagation()">
-            <div id="modal-image-wrap"></div>
-            <h2 id="modal-view-title" style="color:var(--navy); font-size:1.1rem;"></h2>
-            <div id="modal-view-content" style="margin-top:15px; line-height:1.6; white-space:pre-wrap; background:#f8f9fa; padding:15px; border-radius:10px;"></div>
-            <div style="display:flex; gap:10px; margin-top:20px;">
-                <button onclick="deletePost()" style="flex:1; padding:12px; background:#ff8a80; border:none; border-radius:8px; color:#fff; font-weight:bold;">삭제</button>
-                <button onclick="document.getElementById('detail-modal').style.display='none'" style="flex:1; padding:12px; background:var(--navy); border:none; border-radius:8px; color:#fff; font-weight:bold;">닫기</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        const GITHUB_USER = "JOOWANKIM823"; 
-        const GITHUB_REPO = "koda-arp"; 
-        let currentBoard = '공지사항';
-        let selectedId = null;
-
-        // 원우 데이터 60명 (핵심 데이터 유지)
+        let currentYear = 2026; let currentMonth = 3;
+        
+        // 🚀 60명 데이터 (누락 없이 강제 포함)
         const members = [
             { no: 1, name: "김구현", company: "케이알산업", pos: "상무", phone: "010-9401-8700", email: "kimkh@krindus.co.kr" },
-            { no: 60, name: "홍창표", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "cphong@eugenefn.com" }
-            // (이전에 드린 60명 전원 데이터가 이 자리에 들어갑니다)
+            { no: 2, name: "김기현", company: "코람코자산신탁", pos: "이사", phone: "010-8591-3971", email: "escoba@hanmail.net" },
+            { no: 3, name: "김선철", company: "㈜나산종합건축사사무소", pos: "사장", phone: "010-2319-8502", email: "sunchal2001@hanmail.net" },
+            { no: 4, name: "김세훈", company: "㈜케이에스에이치파트너스", pos: "대표이사", phone: "010-5100-4967", email: "sehun.kim@newnnext.com" },
+            { no: 5, name: "김승진", company: "미래에셋증권", pos: "이사", phone: "010-7760-0509", email: "seungjin.kim@miraeasset.com" },
+            { no: 6, name: "김시찬", company: "성원엔지니어링", pos: "부사장", phone: "010-5410-0637", email: "artchan1234@naver.com" },
+            { no: 7, name: "김영미", company: "수협은행", pos: "지점장", phone: "010-6396-2717", email: "kimseller@suhyup-bank.com" },
+            { no: 8, name: "김영철", company: "바인그룹 (동화세상에듀코)", pos: "회장", phone: "010-5239-4542", email: "educo@educo.co.kr" },
+            { no: 9, name: "김인식", company: "한국투자부동산신탁", pos: "상무보", phone: "010-9250-3743", email: "nkis0208@naver.com" },
+            { no: 10, name: "김재구", company: "데이터노우즈", pos: "사장", phone: "010-9351-6355", email: "theanswer@dataknows.ai" },
+            { no: 11, name: "김재만", company: "㈜에스피에스테크", pos: "대표이사", phone: "010-6334-0232", email: "nakjman@naver.com" },
+            { no: 12, name: "김진학", company: "율림건설㈜", pos: "전무이사", phone: "010-3545-5355", email: "jinhakk12@gmail.com" },
+            { no: 13, name: "김태윤", company: "㈜아이엔에스시스템", pos: "대표이사", phone: "010-2685-0651", email: "ins2309@naver.com" },
+            { no: 14, name: "김태형", company: "GS건설", pos: "상무", phone: "010-2221-5789", email: "thkim6@gsenc.com" },
+            { no: 15, name: "김태훈", company: "우암건설 주식회사", pos: "사업본부장", phone: "010-5430-0430", email: "kimth@wooamcon.co.kr" },
+            { no: 16, name: "김평", company: "주식회사 신안디앤씨", pos: "대표이사", phone: "010-7437-7474", email: "shinan7373@naver.com" },
+            { no: 17, name: "김학성", company: "㈜성현이앤씨", pos: "대표이사", phone: "010-9251-9005", email: "asadap@naver.com" },
+            { no: 18, name: "남은오", company: "㈜태정종합건축", pos: "대표이사", phone: "010-2608-3654", email: "tj5136@hanmail.net" },
+            { no: 19, name: "노거희", company: "주식회사 마리디앤씨", pos: "대표이사", phone: "010-4282-9550", email: "nhhoux@naver.com" },
+            { no: 20, name: "노원수", company: "㈜에이치엠", pos: "전무", phone: "010-4174-1470", email: "enemy9980@naver.com" },
+            { no: 21, name: "도종광", company: "한국인프라컨설팅", pos: "부문대표", phone: "010-9155-7314", email: "jkdoh@kifas.co.kr" },
+            { no: 22, name: "류권", company: "주식회사 대유건설", pos: "대표이사", phone: "010-9766-8283", email: "daeyoo@isit.kr" },
+            { no: 23, name: "맹성호", company: "에이앤유디자인그룹", pos: "부사장", phone: "010-6243-2342", email: "shmaeng@anudg.com" },
+            { no: 24, name: "박명식", company: "테마종합건설", pos: "이사", phone: "010-3389-9428", email: "pamosik@hanmail.net" },
+            { no: 25, name: "박승옥", company: "육송㈜", pos: "회장", phone: "010-5211-2407", email: "ceo@yooksong.com" },
+            { no: 26, name: "박옥진", company: "마롬커뮤니케이션", pos: "기획이사", phone: "010-8829-7616", email: "okjin0070@naver.com" },
+            { no: 27, name: "박준형", company: "국토교통부", pos: "토지정책관", phone: "010-2263-2274", email: "jjun0104@gmail.com" },
+            { no: 28, name: "박홍주", company: "㈜씨에이파트너스", pos: "대표이사", phone: "010-3470-8421", email: "jesse.park@casp.co.kr" },
+            { no: 29, name: "방유진", company: "BNY Mellon 투자자문", pos: "대표이사", phone: "010-4168-8604", email: "eugene.bang@bny.com" },
+            { no: 30, name: "백승준", company: "㈜원진엔지니어링", pos: "대표이사", phone: "010-2393-1361", email: "sj.baek@wonjhin.com" },
+            { no: 31, name: "송철한", company: "㈜스페이스에코", pos: "대표이사", phone: "010-9107-7948", email: "echo@space-echo.com" },
+            { no: 32, name: "심동한", company: "우미건설㈜", pos: "상무", phone: "010-8780-0075", email: "shimpson75@naver.com" },
+            { no: 33, name: "안대호", company: "㈜나우동인건축", pos: "대표", phone: "010-4559-4453", email: "andaeho@nowarch.com" },
+            { no: 34, name: "양상화", company: "주식회사 개성건설", pos: "상무이사", phone: "010-3713-0930", email: "ys.yang@kae-sung.co.kr" },
+            { no: 35, name: "오동진", company: "대신증권", pos: "본부장", phone: "010-9748-2788", email: "odong88@hanmail.net" },
+            { no: 36, name: "오재용", company: "한양증권", pos: "상무", phone: "010-3788-7736", email: "dksldi80@naver.com" },
+            { no: 37, name: "우정혁", company: "주식회사 시너지로직", pos: "부사장", phone: "010-6333-1134", email: "fururu79@gmail.com" },
+            { no: 38, name: "이동걸", company: "신영증권㈜", pos: "이사대우", phone: "010-8865-9031", email: "don.dg.lee@gmail.com" },
+            { no: 39, name: "이명화", company: "㈜디자인그룹꼬시나", pos: "대표", phone: "010-7339-2607", email: "robokap@hanmail.net" },
+            { no: 40, name: "이원석", company: "㈜림코", pos: "대표이사", phone: "010-8979-3485", email: "jmlee@rimco.co.kr" },
+            { no: 41, name: "이은", company: "주식회사 엠비앤홀딩스", pos: "전무", phone: "010-9702-6566", email: "eun.lee@mbnholdings.co.kr" },
+            { no: 42, name: "이정혁", company: "로고스투자자문", pos: "상무", phone: "010-2998-7727", email: "kent7727@logosfn.com" },
+            { no: 43, name: "이종원", company: "허브자산운용", pos: "상무", phone: "010-8916-7950", email: "jwonlee@hubasset.co.kr" },
+            { no: 44, name: "이충한", company: "신성연립재건축조합", pos: "조합장", phone: "010-5540-0926", email: "sdoong@hanmail.net" },
+            { no: 45, name: "장영은", company: "씨케이프라퍼티", pos: "대표", phone: "010-5252-8999", email: "scarlet21@hanmail.net" },
+            { no: 46, name: "장용서", company: "㈜서정인터내셔날", pos: "대표이사", phone: "010-8906-3742", email: "yschang@sj-intl.com" },
+            { no: 47, name: "전정은", company: "㈜다원앤컴퍼니", pos: "전무", phone: "010-3662-0225", email: "jejeon@dawon.com" },
+            { no: 48, name: "정용재", company: "삼성증권㈜", pos: "팀장/이사", phone: "010-6543-0730", email: "yongjae.chung@samsung.com" },
+            { no: 49, name: "정지융", company: "㈜위더스", pos: "사장", phone: "010-9116-7059", email: "cm3004@daum.net" },
+            { no: 50, name: "정태희", company: "주식회사 바이오피아", pos: "이사", phone: "010-8600-8293", email: "taeheejung1977@gmail.com" },
+            { no: 51, name: "정호경", company: "㈜삼건사", pos: "대표이사", phone: "010-9115-6775", email: "jhok9093@gmail.com" },
+            { no: 52, name: "조민호", company: "㈜원포올디앤씨", pos: "대표이사", phone: "010-9109-9239", email: "cmh1981c@nate.com" },
+            { no: 53, name: "조일훈", company: "JMC파트너스", pos: "대표", phone: "010-6560-0091", email: "joil0091@naver.com" },
+            { no: 54, name: "채지원", company: "루시아홀딩스㈜", pos: "회장", phone: "010-2915-8880", email: "ceo@luxiaholdings.com" },
+            { no: 55, name: "최상권", company: "하우스테일러", pos: "대표", phone: "010-4127-0505", email: "choisg85@naver.com" },
+            { no: 56, name: "최재진", company: "HL디앤아이 한라", pos: "팀장", phone: "010-6607-2994", email: "jaejin.choi@hlcompany.com" },
+            { no: 57, name: "최태진", company: "서초세무서", pos: "조사팀장", phone: "010-5298-9402", email: "a01052989402@gmail.com" },
+            { no: 58, name: "태원출", company: "삼성물산㈜", pos: "팀장", phone: "010-3320-0063", email: "tae510@naver.com" },
+            { no: 59, name: "함경자", company: "㈜에스알비애드", pos: "부사장", phone: "010-2287-5511", email: "luna5511@naver.com" },
+            { no: 60, name: "홍창표", company: "유진투자증권", pos: "담당", phone: "010-9543-4445", email: "hcpwin@naver.com" }
         ];
-
-        const curriculum = {
-            "2026-03-16": { title: "1주차 강의", c1: "입학식", l1: "KODA 사무국", c2: "-", l2: "-" },
-            "2026-03-23": { title: "2주차 강의", c1: "부동산트랜드와 주택 정책", l1: "진희선 교수", c2: "1학기 개강파티", l2: "원우회 주관" }
-        };
-
-        function getDB() { return JSON.parse(localStorage.getItem('arp_db') || '[]'); }
-        function saveDB(db) { localStorage.setItem('arp_db', JSON.stringify(db)); }
-
-        function savePost() {
-            const sub = document.getElementById('post-subject').value;
-            const con = document.getElementById('post-content').value;
-            const fname = document.getElementById('file-name-input').value;
-            if(!sub) return alert('제목을 입력하세요!');
-            let db = getDB();
-            db.unshift({ id: Date.now(), board: currentBoard, subject: sub, content: con, fileName: fname, date: new Date().toLocaleDateString() });
-            saveDB(db); alert('저장되었습니다!'); showPage('board-page', currentBoard);
-        }
-
-        function drawBoard() {
-            const list = document.getElementById('board-list-content');
-            let posts = getDB().filter(p => p.board === currentBoard);
-            
-            if (currentBoard === '사진첩') {
-                // 📸 갤러리형 레이아웃
-                let html = '<div class="gallery-grid">';
-                html += posts.map(p => {
-                    const imgUrl = p.fileName ? `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${encodeURIComponent(p.fileName)}` : '';
-                    return `
-                        <div class="gallery-item" onclick="showPostDetail(${p.id})">
-                            <div class="gallery-thumb">
-                                ${p.fileName ? `<img src="${imgUrl}" onerror="this.innerHTML='<i class=\'fas fa-image\'></i>'; this.src='';">` : '<i class="fas fa-image"></i>'}
-                            </div>
-                            <div class="gallery-info">
-                                <h4>${p.subject}</h4>
-                                <p>${p.date}</p>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-                html += '</div>';
-                list.innerHTML = posts.length ? html : '<div style="padding:50px; text-align:center; color:#ccc;">사진을 등록해주세요.</div>';
-            } else {
-                // 📝 목록형 레이아웃 (공지, 학습자료)
-                let html = "";
-                if(currentBoard === '공지사항') {
-                    html += Object.keys(curriculum).map(date => `<div class="post-card" onclick="showCurriculumDetail('${date}')"><div><h4>${curriculum[date].title}</h4><p style="font-size:0.8rem; color:#888;">${date} 강의안내</p></div><i class="fas fa-chevron-right" style="color:#ddd;"></i></div>`).join('');
-                }
-                html += posts.map(p => `<div class="post-card" onclick="showPostDetail(${p.id})"><div><h4>${p.subject}</h4><p style="font-size:0.8rem; color:#888;">${p.date} ${p.fileName ? '📎' : ''}</p></div><i class="fas fa-chevron-right" style="color:#ddd;"></i></div>`).join('');
-                list.innerHTML = html || '<div style="padding:50px; text-align:center; color:#ccc;">글이 없습니다.</div>';
-            }
-        }
-
-        function showPostDetail(id) {
-            const p = getDB().find(i => i.id == id);
-            selectedId = id;
-            document.getElementById('detail-modal').style.display = 'block';
-            document.getElementById('modal-view-title').innerText = p.subject;
-            document.getElementById('modal-view-content').innerText = p.content;
-            const imgWrap = document.getElementById('modal-image-wrap');
-            if(p.fileName && (p.fileName.match(/\.(jpg|jpeg|png|gif)$/i))) {
-                imgWrap.innerHTML = `<img src="https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${encodeURIComponent(p.fileName)}">`;
-            } else {
-                imgWrap.innerHTML = "";
-            }
-        }
-
-        function deletePost() {
-            if(!confirm('삭제하시겠습니까?')) return;
-            saveDB(getDB().filter(i => i.id != selectedId));
-            document.getElementById('detail-modal').style.display = 'none';
-            drawBoard();
-        }
 
         function showPage(pageId, title = '') {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            if(title) { currentBoard = title; document.getElementById('board-title').innerText = title; }
-            if(pageId === 'board-page') drawBoard();
+            
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            const tabs = document.querySelectorAll('.nav-tab');
+            if(pageId === 'main-page') tabs[0].classList.add('active');
+            if(pageId === 'member-page') { tabs[1].classList.add('active'); renderMembers(members); }
+            
             window.scrollTo(0,0);
         }
 
-        function openWrite() {
-            document.getElementById('post-subject').value = "";
-            document.getElementById('post-content').value = "";
-            document.getElementById('file-name-input').value = "";
-            showPage('write-page');
+        function renderMembers(data) {
+            const list = document.getElementById('member-list');
+            document.getElementById('m-count').innerText = data.length;
+            list.innerHTML = data.map(m => `
+                <div class="m-card">
+                    <div class="m-photo"><img src="${m.name}.jpg" onerror="this.src='https://via.placeholder.com/75x95?text=NoPic'"></div>
+                    <div class="m-info">
+                        <h3>${m.name}</h3>
+                        <p>${m.company} | ${m.pos}</p>
+                        <div class="m-btns">
+                            <a href="tel:${m.phone}" class="m-btn"><i class="fas fa-phone"></i></a>
+                            <a href="mailto:${m.email}" class="m-btn"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // 달력 로직 등 기존 유지...
-        window.onload = () => { /* drawCalendar(), drawMembers() 호출... */ drawBoard(); };
+        function drawCalendar() {
+            document.getElementById('cal-month-title').innerText = `${currentYear}년 ${currentMonth}월`;
+            const grid = document.getElementById('cal-grid-content');
+            grid.innerHTML = '<div class="day-label">S</div><div class="day-label">M</div><div class="day-label">T</div><div class="day-label">W</div><div class="day-label">T</div><div class="day-label">F</div><div class="day-label">S</div>';
+            
+            const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
+            const lastDate = new Date(currentYear, currentMonth, 0).getDate();
+            
+            for(let i=0; i<firstDay; i++) grid.innerHTML += '<div></div>';
+            for(let d=1; d<=lastDate; d++) {
+                const div = document.createElement('div');
+                if(new Date(currentYear, currentMonth - 1, d).getDay() === 1) div.className = 'monday';
+                div.innerText = d;
+                grid.appendChild(div);
+            }
+        }
+
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if(currentMonth < 1) { currentYear--; currentMonth = 12; }
+            if(currentMonth > 12) { currentYear++; currentMonth = 1; }
+            drawCalendar();
+        }
+
+        window.onload = () => { 
+            drawCalendar(); 
+            renderMembers(members); // 🚀 시작하자마자 명단 로드
+        };
     </script>
 </body>
 </html>
