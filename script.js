@@ -1,0 +1,425 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const pages = document.querySelectorAll(".page");
+  const navButtons = document.querySelectorAll(".nav-btn");
+
+  const recentNotices = document.getElementById("recentNotices");
+  const weeklyLectureCard = document.getElementById("weeklyLectureCard");
+
+  const memberSearch = document.getElementById("memberSearch");
+  const memberList = document.getElementById("memberList");
+  const departmentFilterButtons = document.querySelectorAll(".filter-chip");
+  let activeDepartmentFilter = "전체";
+
+  const noticeList = document.getElementById("noticeList");
+  const curriculumList = document.getElementById("curriculumList");
+  const galleryList = document.getElementById("galleryList");
+  const boardList = document.getElementById("boardList");
+
+  const memberCount = document.getElementById("memberCount");
+  const noticeCount = document.getElementById("noticeCount");
+  const curriculumCount = document.getElementById("curriculumCount");
+  const galleryCount = document.getElementById("galleryCount");
+
+  const attendanceIdInput = document.getElementById("attendanceIdInput");
+  const attendanceSearchBtn = document.getElementById("attendanceSearchBtn");
+  const attendanceInitial = document.getElementById("attendanceInitial");
+  const attendanceNotFound = document.getElementById("attendanceNotFound");
+  const attendanceResult = document.getElementById("attendanceResult");
+  const attendanceResultName = document.getElementById("attendanceResultName");
+  const attendanceResultId = document.getElementById("attendanceResultId");
+  const attendanceResultMeta = document.getElementById("attendanceResultMeta");
+  const attendanceResultRate = document.getElementById("attendanceResultRate");
+  const attendancePresentCount = document.getElementById("attendancePresentCount");
+  const attendanceLateCount = document.getElementById("attendanceLateCount");
+  const attendanceEarlyLeaveCount = document.getElementById("attendanceEarlyLeaveCount");
+  const attendanceAbsentCount = document.getElementById("attendanceAbsentCount");
+  const attendanceWeeklyList = document.getElementById("attendanceWeeklyList");
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return dateString;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  }
+
+  function parseCurriculumDate(dateString) {
+    const match = String(dateString).match(/(\d{2})월\s*(\d{2})일/);
+    if (!match) return null;
+    const month = Number(match[1]);
+    const day = Number(match[2]);
+    return new Date(2026, month - 1, day);
+  }
+
+  function switchPage(pageId) {
+    pages.forEach((page) => {
+      page.classList.toggle("active", page.id === pageId);
+    });
+
+    navButtons.forEach((button) => {
+      button.classList.toggle("active", button.dataset.page === pageId);
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function renderCounts() {
+    memberCount.textContent = `${members.length}명`;
+    noticeCount.textContent = `${notices.length}건`;
+    curriculumCount.textContent = `${curriculum.length}개`;
+    galleryCount.textContent = `${gallery.length}장`;
+  }
+
+  function renderWeeklyLecture() {
+    if (!weeklyLectureCard) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let selectedItem = null;
+
+    for (const item of curriculum) {
+      const itemDate = parseCurriculumDate(item.date);
+      if (!itemDate) continue;
+      if (itemDate >= today) {
+        selectedItem = item;
+        break;
+      }
+    }
+
+    if (!selectedItem && curriculum.length) {
+      selectedItem = curriculum[curriculum.length - 1];
+    }
+
+    if (!selectedItem) {
+      weeklyLectureCard.innerHTML = `
+        <div class="weekly-lecture-week">안내</div>
+        <div class="weekly-lecture-title">등록된 강의 정보가 없습니다.</div>
+        <div class="weekly-lecture-meta">커리큘럼 데이터를 확인해주세요.</div>
+      `;
+      return;
+    }
+
+    weeklyLectureCard.innerHTML = `
+      <div class="weekly-lecture-week">${selectedItem.week} · ${selectedItem.date}</div>
+      <div class="weekly-lecture-title">${selectedItem.title}</div>
+      <div class="weekly-lecture-meta">강사: ${selectedItem.speaker}\n소속: ${selectedItem.organization}</div>
+    `;
+  }
+
+  function renderRecentNotices() {
+    if (!recentNotices) return;
+
+    recentNotices.innerHTML = "";
+
+    if (!notices.length) {
+      recentNotices.innerHTML = `<div class="empty-state">등록된 공지가 없습니다.</div>`;
+      return;
+    }
+
+    notices.slice(0, 3).forEach((notice) => {
+      const item = document.createElement("div");
+      item.className = "simple-item";
+      item.innerHTML = `
+        <div class="simple-item-title">${notice.title}</div>
+        <div class="simple-item-date">${formatDate(notice.date)}</div>
+      `;
+      recentNotices.appendChild(item);
+    });
+  }
+
+  function renderMembers(keyword = "") {
+    memberList.innerHTML = "";
+
+    const lowerKeyword = keyword.trim().toLowerCase();
+
+    const filteredMembers = members.filter((member) => {
+      const matchesKeyword = `
+        ${member.id}
+        ${member.name}
+        ${member.company}
+        ${member.position}
+        ${member.memberType || ""}
+        ${member.field || ""}
+        ${member.department || ""}
+        ${member.phone || ""}
+        ${member.email || ""}
+        ${member.intro || ""}
+      `.toLowerCase().includes(lowerKeyword);
+
+      const matchesDepartment =
+        activeDepartmentFilter === "전체" ||
+        member.department === activeDepartmentFilter;
+
+      return matchesKeyword && matchesDepartment;
+    });
+
+    if (!filteredMembers.length) {
+      memberList.innerHTML = `<div class="empty-state">검색 결과가 없습니다.</div>`;
+      return;
+    }
+
+    filteredMembers.forEach((member) => {
+      const memberTypeChip = member.memberType
+        ? `<span class="member-chip member-type">${member.memberType}</span>`
+        : "";
+
+      const fieldChip = member.field
+        ? `<span class="member-chip">${member.field}</span>`
+        : "";
+
+      const departmentChip = member.department
+        ? `<span class="member-chip">${member.department}</span>`
+        : "";
+
+      const card = document.createElement("div");
+      card.className = "member-card";
+      card.innerHTML = `
+        <div class="member-top">
+          <div>
+            <div class="member-name">${member.name}</div>
+            <div class="member-company">${member.company}</div>
+          </div>
+          <div class="member-badge">${member.position}</div>
+        </div>
+
+        <div class="member-meta-chips">
+          ${memberTypeChip}
+          ${fieldChip}
+          ${departmentChip}
+        </div>
+
+        <div class="member-info">
+          <div class="info-row">
+            <span class="info-label">ID</span>
+            <span>${member.id}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">연락처</span>
+            <span>${member.phone || "-"}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">이메일</span>
+            <span>${member.email || "-"}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">소개</span>
+            <span>${member.intro || "-"}</span>
+          </div>
+        </div>
+      `;
+      memberList.appendChild(card);
+    });
+  }
+
+  function renderNotices() {
+    noticeList.innerHTML = "";
+
+    if (!notices.length) {
+      noticeList.innerHTML = `<div class="empty-state">등록된 공지가 없습니다.</div>`;
+      return;
+    }
+
+    notices.forEach((notice) => {
+      const card = document.createElement("div");
+      card.className = "content-card";
+      card.innerHTML = `
+        <h3>${notice.title}</h3>
+        <div class="content-meta">${formatDate(notice.date)}</div>
+        <div class="content-body">${notice.content}</div>
+      `;
+      noticeList.appendChild(card);
+    });
+  }
+
+  function renderCurriculum() {
+    curriculumList.innerHTML = "";
+
+    if (!curriculum.length) {
+      curriculumList.innerHTML = `<div class="empty-state">등록된 커리큘럼이 없습니다.</div>`;
+      return;
+    }
+
+    curriculum.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "content-card";
+      card.innerHTML = `
+        <h3>${item.week} · ${item.title}</h3>
+        <div class="content-meta">${item.date}</div>
+        <div class="content-body">강사: ${item.speaker}\n소속: ${item.organization}</div>
+      `;
+      curriculumList.appendChild(card);
+    });
+  }
+
+  function renderGallery() {
+    galleryList.innerHTML = "";
+
+    if (!gallery.length) {
+      galleryList.innerHTML = `<div class="empty-state">등록된 사진이 없습니다.</div>`;
+      return;
+    }
+
+    gallery.forEach((item) => {
+      const card = document.createElement("div");
+      card.className = "gallery-card";
+      card.innerHTML = `
+        <img class="gallery-image" src="${item.image}" alt="${item.title}" />
+        <div class="gallery-caption">
+          <strong>${item.title}</strong>
+          <span>${formatDate(item.date)}</span>
+        </div>
+      `;
+      galleryList.appendChild(card);
+    });
+  }
+
+  function renderBoard() {
+    boardList.innerHTML = "";
+
+    if (!boardPosts.length) {
+      boardList.innerHTML = `<div class="empty-state">등록된 게시글이 없습니다.</div>`;
+      return;
+    }
+
+    boardPosts.forEach((post) => {
+      const card = document.createElement("div");
+      card.className = "content-card";
+      card.innerHTML = `
+        <h3>${post.title}</h3>
+        <div class="content-meta">${post.author} · ${formatDate(post.date)}</div>
+        <div class="content-body">${post.content}</div>
+      `;
+      boardList.appendChild(card);
+    });
+  }
+
+  function getStatusClass(status) {
+    switch (status) {
+      case "출석":
+        return "status-present";
+      case "지각":
+        return "status-late";
+      case "조퇴":
+        return "status-early-leave";
+      case "결석":
+        return "status-absent";
+      default:
+        return "status-empty";
+    }
+  }
+
+  function resetAttendanceView() {
+    attendanceInitial.classList.remove("hidden");
+    attendanceNotFound.classList.add("hidden");
+    attendanceResult.classList.add("hidden");
+  }
+
+  function showAttendanceNotFound() {
+    attendanceInitial.classList.add("hidden");
+    attendanceNotFound.classList.remove("hidden");
+    attendanceResult.classList.add("hidden");
+  }
+
+  function showAttendanceResult(person) {
+    attendanceInitial.classList.add("hidden");
+    attendanceNotFound.classList.add("hidden");
+    attendanceResult.classList.remove("hidden");
+
+    attendanceResultName.textContent = person.name;
+    attendanceResultId.textContent = `ID ${person.id}`;
+    attendanceResultMeta.textContent =
+      `${person.company} · ${person.position}${person.department ? ` · ${person.department}` : ""}`;
+    attendanceResultRate.textContent = `${person.attendanceRate}%`;
+
+    attendancePresentCount.textContent = `${person.summary.present}회`;
+    attendanceLateCount.textContent = `${person.summary.late}회`;
+    attendanceEarlyLeaveCount.textContent = `${person.summary.earlyLeave}회`;
+    attendanceAbsentCount.textContent = `${person.summary.absent}회`;
+
+    attendanceWeeklyList.innerHTML = "";
+
+    person.weekly.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "attendance-weekly-item";
+      row.innerHTML = `
+        <div class="attendance-week-left">
+          <div class="attendance-week-title">${item.week}</div>
+          <div class="attendance-week-topic">${item.topic || "-"}</div>
+        </div>
+        <div class="attendance-status-badge ${getStatusClass(item.status)}">
+          ${item.status || "미입력"}
+        </div>
+      `;
+      attendanceWeeklyList.appendChild(row);
+    });
+  }
+
+  function searchAttendanceById() {
+    const inputId = attendanceIdInput.value.trim();
+
+    if (!inputId) {
+      resetAttendanceView();
+      return;
+    }
+
+    const matched = attendanceLookupData.find(
+      (item) => String(item.id).trim() === inputId
+    );
+
+    if (!matched) {
+      showAttendanceNotFound();
+      return;
+    }
+
+    showAttendanceResult(matched);
+  }
+
+  navButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      switchPage(button.dataset.page);
+    });
+  });
+
+  if (memberSearch) {
+    memberSearch.addEventListener("input", (e) => {
+      renderMembers(e.target.value);
+    });
+  }
+
+  departmentFilterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      activeDepartmentFilter = button.dataset.filter;
+
+      departmentFilterButtons.forEach((btn) => {
+        btn.classList.remove("active");
+      });
+      button.classList.add("active");
+
+      renderMembers(memberSearch ? memberSearch.value : "");
+    });
+  });
+
+  if (attendanceSearchBtn) {
+    attendanceSearchBtn.addEventListener("click", searchAttendanceById);
+  }
+
+  if (attendanceIdInput) {
+    attendanceIdInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        searchAttendanceById();
+      }
+    });
+  }
+
+  renderCounts();
+  renderWeeklyLecture();
+  renderRecentNotices();
+  renderMembers();
+  renderNotices();
+  renderCurriculum();
+  renderGallery();
+  renderBoard();
+  resetAttendanceView();
+});
