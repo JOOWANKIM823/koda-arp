@@ -63,30 +63,6 @@
           </div>
         </div>
 
-        <div class="section-card home-shortcut-card">
-          <div class="section-title-row">
-            <h3>빠른 안내</h3>
-          </div>
-          <div class="home-shortcuts">
-            <div class="shortcut-item">
-              <div class="shortcut-title">원우명단</div>
-              <div class="shortcut-text">이름, 회사명, 직책, 분과 검색 가능</div>
-            </div>
-            <div class="shortcut-item">
-              <div class="shortcut-title">출석현황</div>
-              <div class="shortcut-text">홈페이지 ID 입력으로 개인 조회</div>
-            </div>
-            <div class="shortcut-item">
-              <div class="shortcut-title">공지사항</div>
-              <div class="shortcut-text">운영진 공지와 안내사항 확인</div>
-            </div>
-            <div class="shortcut-item">
-              <div class="shortcut-title">커리큘럼</div>
-              <div class="shortcut-text">상반기 일정과 강의 정보 확인</div>
-            </div>
-          </div>
-        </div>
-
         <div class="section-card">
           <div class="section-title-row">
             <h3>최근 공지</h3>
@@ -99,6 +75,7 @@
         <div class="section-card sticky-search">
           <h2>원우명단</h2>
           <p class="section-subtitle">이름, 회사명, 직책, 분야, 분과, 회원사 여부로 검색할 수 있습니다.</p>
+
           <input
             type="text"
             id="memberSearch"
@@ -113,7 +90,14 @@
             <button class="filter-chip" data-filter="융합분과">융합분과</button>
             <button class="filter-chip" data-filter="창조분과">창조분과</button>
           </div>
+
+          <div class="favorite-filter-row">
+            <button id="favoriteOnlyBtn" class="favorite-only-btn" type="button">
+              ☆ 즐겨찾기만 보기
+            </button>
+          </div>
         </div>
+
         <div id="memberList" class="member-list"></div>
       </section>
 
@@ -137,7 +121,7 @@
               조회하기
             </button>
           </div>
-          <p class="attendance-help-text">이제 60명 전체 조회 가능 · 실제 출석 미반영자는 미입력으로 표시됩니다.</p>
+          <p class="attendance-help-text">예시 ID: 26060 / 26001 / 26002 / 26003</p>
         </div>
 
         <div id="attendanceInitial" class="empty-state">
@@ -239,15 +223,9 @@
   <div id="memberModal" class="modal-overlay hidden">
     <div class="modal-sheet">
       <div class="modal-header">
-        <div class="modal-header-main">
-          <div id="modalMemberPhotoWrap" class="modal-photo-wrap">
-            <img id="modalMemberPhoto" class="modal-photo hidden" alt="원우 사진" />
-            <div id="modalMemberPhotoFallback" class="modal-photo-fallback">-</div>
-          </div>
-          <div>
-            <div id="modalMemberName" class="modal-title">-</div>
-            <div id="modalMemberCompany" class="modal-subtitle">-</div>
-          </div>
+        <div>
+          <div id="modalMemberName" class="modal-title">-</div>
+          <div id="modalMemberCompany" class="modal-subtitle">-</div>
         </div>
         <button id="memberModalCloseBtn" class="modal-close-btn" type="button">×</button>
       </div>
@@ -258,6 +236,14 @@
         <span id="modalMemberField" class="member-chip">-</span>
         <span id="modalMemberDepartment" class="member-chip">-</span>
       </div>
+
+      <div class="modal-action-row">
+        <button id="modalCallBtn" class="contact-action-btn" type="button">전화걸기</button>
+        <button id="modalCopyPhoneBtn" class="contact-action-btn" type="button">번호복사</button>
+        <button id="modalCopyEmailBtn" class="contact-action-btn" type="button">이메일복사</button>
+      </div>
+
+      <div id="contactToast" class="contact-toast hidden">복사되었습니다.</div>
 
       <div class="modal-info-list">
         <div class="modal-info-row">

@@ -53,4 +53,153 @@ const members = [
   { id: '26052', name: '조민호', company: '㈜원포올디앤씨', position: '대표이사', memberType: '준회원', field: '분양대행', department: '융합분과', phone: '010-9109-9239', email: 'cmh1981c@nate.com', intro: '' },
   { id: '26053', name: '조일훈', company: 'JMC파트너스', position: '대표', memberType: '', field: '시행겸업', department: '융합분과', phone: '010-6560-0091', email: 'joil0091@naver.com', intro: '' },
   { id: '26054', name: '채지원', company: '루시아홀딩스㈜', position: '회장', memberType: '정회원', field: '시행', department: '개발분과', phone: '010-2915-8880', email: 'ceo@luxiaholdings.com', intro: '' },
-  { id: '26055', name: '최상권', company: '하우스 테일러 공인중개사사무소', position: '대표', memberType: '', field: '시행겸업', department: '개발분과', phone: '010-4127-0505', email: 'cho
+  { id: '26055', name: '최상권', company: '하우스 테일러 공인중개사사무소', position: '대표', memberType: '', field: '시행겸업', department: '개발분과', phone: '010-4127-0505', email: 'choisg85@naver.com', intro: '' },
+  { id: '26056', name: '최재진', company: 'HL디앤아이 한라', position: '팀장', memberType: '정회원', field: '시공', department: '융합분과', phone: '010-6607-2994', email: 'jaejin.choi@hlcompany.com', intro: '' },
+  { id: '26057', name: '최태진', company: '서초세무서', position: '조사팀장', memberType: '', field: '공공기관', department: '융합분과', phone: '010-5298-9402', email: 'a01052989402@gmail.com', intro: '' },
+  { id: '26058', name: '태원출', company: '삼성물산㈜', position: '팀장', memberType: '정회원', field: '시행/시공', department: '창조분과', phone: '010-3320-0063', email: 'tae510@naver.com', intro: '' },
+  { id: '26059', name: '함경자', company: '㈜에스알비애드', position: '부사장', memberType: '준회원', field: '기타', department: '도시분과', phone: '010-2287-5511', email: 'luna5511@naver.com', intro: '' },
+  { id: '26060', name: '홍창표', company: '유진투자증권', position: '담당', memberType: '준회원', field: '금융', department: '융합분과', phone: '010-9543-4445', email: 'hcpwin@naver.com', intro: '' }
+];
+
+const attendanceBaseWeeks = [
+  { week: "1주차", status: "미입력", topic: "입학식" },
+  { week: "2주차", status: "미입력", topic: "부동산트랜드와 주택 정책" },
+  { week: "3주차", status: "미입력", topic: "부동산 프로젝트 리츠 사업" }
+];
+
+const attendanceLookupData = members.map((member) => ({
+  id: member.id,
+  name: member.name,
+  company: member.company,
+  position: member.position,
+  department: member.department,
+  attendanceRate: 0,
+  summary: {
+    present: 0,
+    late: 0,
+    earlyLeave: 0,
+    absent: 0
+  },
+  weekly: attendanceBaseWeeks.map((item) => ({ ...item }))
+}));
+
+const attendanceOverrides = {
+  "26060": {
+    attendanceRate: 100,
+    summary: { present: 3, late: 0, earlyLeave: 0, absent: 0 },
+    weekly: [
+      { week: "1주차", status: "출석", topic: "입학식" },
+      { week: "2주차", status: "출석", topic: "부동산트랜드와 주택 정책" },
+      { week: "3주차", status: "출석", topic: "부동산 프로젝트 리츠 사업" }
+    ]
+  },
+  "26001": {
+    attendanceRate: 100,
+    summary: { present: 3, late: 0, earlyLeave: 0, absent: 0 },
+    weekly: [
+      { week: "1주차", status: "출석", topic: "입학식" },
+      { week: "2주차", status: "출석", topic: "부동산트랜드와 주택 정책" },
+      { week: "3주차", status: "출석", topic: "부동산 프로젝트 리츠 사업" }
+    ]
+  },
+  "26002": {
+    attendanceRate: 66.7,
+    summary: { present: 2, late: 1, earlyLeave: 0, absent: 0 },
+    weekly: [
+      { week: "1주차", status: "출석", topic: "입학식" },
+      { week: "2주차", status: "지각", topic: "부동산트랜드와 주택 정책" },
+      { week: "3주차", status: "출석", topic: "부동산 프로젝트 리츠 사업" }
+    ]
+  },
+  "26003": {
+    attendanceRate: 33.3,
+    summary: { present: 1, late: 0, earlyLeave: 0, absent: 2 },
+    weekly: [
+      { week: "1주차", status: "결석", topic: "입학식" },
+      { week: "2주차", status: "출석", topic: "부동산트랜드와 주택 정책" },
+      { week: "3주차", status: "결석", topic: "부동산 프로젝트 리츠 사업" }
+    ]
+  }
+};
+
+attendanceLookupData.forEach((item) => {
+  const override = attendanceOverrides[item.id];
+  if (override) {
+    item.attendanceRate = override.attendanceRate;
+    item.summary = override.summary;
+    item.weekly = override.weekly;
+  }
+});
+
+const notices = [
+  {
+    title: "4월 정기 모임 안내",
+    date: "2026-04-05",
+    content: "4월 정기 모임은 4월 5일 오후 7시에 진행됩니다."
+  },
+  {
+    title: "원우수첩 정보 업데이트 요청",
+    date: "2026-04-02",
+    content: "회사명, 직책, 연락처 변경사항이 있는 분들은 운영진에게 알려주세요."
+  }
+];
+
+const curriculum = [
+  {
+    week: "1주차",
+    date: "03월 16일",
+    title: "입학식",
+    speaker: "KODA 사무국",
+    organization: "입학식"
+  },
+  {
+    week: "2주차",
+    date: "03월 23일",
+    title: "부동산트랜드와 주택 정책",
+    speaker: "진희선",
+    organization: "연세대 도시공학과 특임교수"
+  },
+  {
+    week: "3주차",
+    date: "03월 30일",
+    title: "부동산 프로젝트 리츠 사업",
+    speaker: "김승범",
+    organization: "국토교통부 과장"
+  },
+  {
+    week: "4주차",
+    date: "04월 06일",
+    title: "특강(디벨로퍼의 상상력)",
+    speaker: "문주현",
+    organization: "한국부동산개발협회 명예회장 / 엠디엠그룹 회장"
+  },
+  {
+    week: "5주차",
+    date: "04월 13일",
+    title: "인구와 부, 인구학 / 부동산 PF시장 현황과 위기에 대한 정부정책",
+    speaker: "고우림 / 이병훈",
+    organization: "서울대 보건대학원 교수 / 대한주택건설협회 부회장"
+  }
+];
+
+const gallery = [
+  {
+    title: "입학식 현장",
+    date: "2026-03-20",
+    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    title: "첫 네트워킹",
+    date: "2026-03-20",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+  }
+];
+
+const boardPosts = [
+  {
+    title: "자기소개 글 남겨주세요",
+    author: "운영진",
+    date: "2026-04-01",
+    content: "간단한 자기소개와 관심 분야를 자유롭게 남겨주세요."
+  }
+];

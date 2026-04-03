@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const FAVORITES_KEY = "kodaArpFavorites";
+
   const pages = document.querySelectorAll(".page");
   const navButtons = document.querySelectorAll(".nav-btn");
 
@@ -8,7 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const memberSearch = document.getElementById("memberSearch");
   const memberList = document.getElementById("memberList");
   const departmentFilterButtons = document.querySelectorAll(".filter-chip");
+  const favoriteOnlyBtn = document.getElementById("favoriteOnlyBtn");
+
   let activeDepartmentFilter = "전체";
+  let favoriteOnlyMode = false;
 
   const memberModal = document.getElementById("memberModal");
   const memberModalCloseBtn = document.getElementById("memberModalCloseBtn");
@@ -22,8 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalMemberPhone = document.getElementById("modalMemberPhone");
   const modalMemberEmail = document.getElementById("modalMemberEmail");
   const modalMemberIntro = document.getElementById("modalMemberIntro");
-  const modalMemberPhoto = document.getElementById("modalMemberPhoto");
-  const modalMemberPhotoFallback = document.getElementById("modalMemberPhotoFallback");
+
+  const modalCallBtn = document.getElementById("modalCallBtn");
+  const modalCopyPhoneBtn = document.getElementById("modalCopyPhoneBtn");
+  const modalCopyEmailBtn = document.getElementById("modalCopyEmailBtn");
+  const contactToast = document.getElementById("contactToast");
 
   const noticeList = document.getElementById("noticeList");
   const curriculumList = document.getElementById("curriculumList");
@@ -50,6 +58,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const attendanceAbsentCount = document.getElementById("attendanceAbsentCount");
   const attendanceWeeklyList = document.getElementById("attendanceWeeklyList");
 
+  let currentModalPhone = "";
+  let currentModalEmail = "";
+  let toastTimer = null;
+
+  function getFavorites() {
+    try {
+      const raw = localStorage.getItem(FAVORITES_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function saveFavorites(favorites) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  }
+
+  function toggleFavorite(memberId) {
+    const favorites = getFavorites();
+    const exists = favorites.includes(memberId);
+
+    const nextFavorites = exists
+      ? favorites.filter((id) => id !== memberId)
+      : [...favorites, memberId];
+
+    saveFavorites(nextFavorites);
+  }
+
+  function updateFavoriteOnlyButton() {
+    if (!favoriteOnlyBtn) return;
+    favoriteOnlyBtn.classList.toggle("active", favoriteOnlyMode);
+    favoriteOnlyBtn.textContent = favoriteOnlyMode
+      ? "★ 즐겨찾기만 보는 중"
+      : "☆ 즐겨찾기만 보기";
+  }
+
   function formatDate(dateString) {
     const date = new Date(dateString);
     if (Number.isNaN(date.getTime())) return dateString;
@@ -67,13 +112,66 @@ document.addEventListener("DOMContentLoaded", () => {
     return new Date(2026, month - 1, day);
   }
 
-  function getMemberPhotoSrc(member) {
-    return `./${encodeURIComponent(member.name)}.jpg`;
+  function sanitizePhone(phone) {
+    return String(phone || "").replace(/[^0-9+]/g, "");
   }
 
-  function getInitialText(name) {
-    if (!name) return "?";
-    return String(name).trim().charAt(0);
+  function normalizeEmail(email) {
+    return String(email || "").trim();
+  }
+
+  function setButtonEnabled(button, enabled) {
+    if (!button) return;
+    button.disabled = !enabled;
+    button.classList.toggle("disabled", !enabled);
+  }
+
+  function showToast(message) {
+    if (!contactToast) return;
+    contactToast.textContent = message;
+    contactToast.classList.remove("hidden");
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      contactToast.classList.add("hidden");
+    }, 1800);
+  }
+
+  async function copyText(text, successMessage) {
+    if (!text) {
+      showToast("복사할 정보가 없습니다.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast(successMessage);
+    } catch (error) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+
+      try {
+        document.execCommand("copy");
+        showToast(successMessage);
+      } catch (err) {
+        showToast("복사에 실패했습니다.");
+      }
+
+      document.body.removeChild(textarea);
+    }
+  }
+
+  function tryCall(phone) {
+    if (!phone) {
+      showToast("전화번호가 없습니다.");
+      return;
+    }
+    window.location.href = `tel:${phone}`;
   }
 
   function switchPage(pageId) {
@@ -157,6 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
     memberList.innerHTML = "";
 
     const lowerKeyword = keyword.trim().toLowerCase();
+    const favoriteIds = getFavorites();
 
     const filteredMembers = members.filter((member) => {
       const matchesKeyword = `
@@ -176,7 +275,10 @@ document.addEventListener("DOMContentLoaded", () => {
         activeDepartmentFilter === "전체" ||
         member.department === activeDepartmentFilter;
 
-      return matchesKeyword && matchesDepartment;
+      const matchesFavorite =
+        !favoriteOnlyMode || favoriteIds.includes(member.id);
+
+      return matchesKeyword && matchesDepartment && matchesFavorite;
     });
 
     if (!filteredMembers.length) {
@@ -185,6 +287,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     filteredMembers.forEach((member) => {
+      const favorite = favoriteIds.includes(member.id);
+
       const memberTypeChip = member.memberType
         ? `<span class="member-chip member-type">${member.memberType}</span>`
         : "";
@@ -197,39 +301,38 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<span class="member-chip">${member.department}</span>`
         : "";
 
-      const photoSrc = getMemberPhotoSrc(member);
-      const initialText = getInitialText(member.name);
+      const favoriteBadge = favorite
+        ? `<span class="favorite-inline-badge">★ 즐겨찾기</span>`
+        : "";
 
       const card = document.createElement("div");
       card.className = "member-card";
       card.dataset.memberId = member.id;
       card.innerHTML = `
-        <div class="member-card-header">
-          <div class="member-thumb-wrap">
-            <img
-              class="member-thumb"
-              src="${photoSrc}"
-              alt="${member.name}"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-            />
-            <div class="member-thumb-fallback" style="display:none;">${initialText}</div>
+        <div class="member-top-row">
+          <div class="member-top-left">
+            <div class="member-name-line">
+              <div class="member-name">${member.name}</div>
+              ${favoriteBadge}
+            </div>
+            <div class="member-company">${member.company}</div>
           </div>
 
-          <div style="flex:1;">
-            <div class="member-top">
-              <div>
-                <div class="member-name">${member.name}</div>
-                <div class="member-company">${member.company}</div>
-              </div>
-              <div class="member-badge">${member.position}</div>
-            </div>
+          <button
+            class="favorite-star-btn ${favorite ? "active" : ""}"
+            data-favorite-id="${member.id}"
+            type="button"
+            aria-label="즐겨찾기"
+          >
+            ${favorite ? "★" : "☆"}
+          </button>
+        </div>
 
-            <div class="member-meta-chips">
-              ${memberTypeChip}
-              ${fieldChip}
-              ${departmentChip}
-            </div>
-          </div>
+        <div class="member-meta-chips">
+          <span class="member-badge">${member.position}</span>
+          ${memberTypeChip}
+          ${fieldChip}
+          ${departmentChip}
         </div>
 
         <div class="member-info">
@@ -266,23 +369,16 @@ document.addEventListener("DOMContentLoaded", () => {
     modalMemberEmail.textContent = member.email || "-";
     modalMemberIntro.textContent = member.intro || "등록된 소개가 없습니다.";
 
-    const photoSrc = getMemberPhotoSrc(member);
-    modalMemberPhoto.classList.add("hidden");
-    modalMemberPhotoFallback.classList.remove("hidden");
-    modalMemberPhotoFallback.textContent = getInitialText(member.name);
+    currentModalPhone = sanitizePhone(member.phone);
+    currentModalEmail = normalizeEmail(member.email);
 
-    modalMemberPhoto.onload = () => {
-      modalMemberPhoto.classList.remove("hidden");
-      modalMemberPhotoFallback.classList.add("hidden");
-    };
+    setButtonEnabled(modalCallBtn, !!currentModalPhone);
+    setButtonEnabled(modalCopyPhoneBtn, !!currentModalPhone);
+    setButtonEnabled(modalCopyEmailBtn, !!currentModalEmail);
 
-    modalMemberPhoto.onerror = () => {
-      modalMemberPhoto.classList.add("hidden");
-      modalMemberPhotoFallback.classList.remove("hidden");
-    };
-
-    modalMemberPhoto.src = photoSrc;
-    modalMemberPhoto.alt = member.name || "원우 사진";
+    if (contactToast) {
+      contactToast.classList.add("hidden");
+    }
 
     memberModal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
@@ -495,11 +591,45 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  if (favoriteOnlyBtn) {
+    favoriteOnlyBtn.addEventListener("click", () => {
+      favoriteOnlyMode = !favoriteOnlyMode;
+      updateFavoriteOnlyButton();
+      renderMembers(memberSearch ? memberSearch.value : "");
+    });
+  }
+
   if (memberList) {
     memberList.addEventListener("click", (e) => {
+      const favoriteBtn = e.target.closest(".favorite-star-btn");
+      if (favoriteBtn) {
+        e.stopPropagation();
+        toggleFavorite(favoriteBtn.dataset.favoriteId);
+        renderMembers(memberSearch ? memberSearch.value : "");
+        return;
+      }
+
       const card = e.target.closest(".member-card");
       if (!card) return;
       openMemberModal(card.dataset.memberId);
+    });
+  }
+
+  if (modalCallBtn) {
+    modalCallBtn.addEventListener("click", () => {
+      tryCall(currentModalPhone);
+    });
+  }
+
+  if (modalCopyPhoneBtn) {
+    modalCopyPhoneBtn.addEventListener("click", () => {
+      copyText(currentModalPhone, "전화번호가 복사되었습니다.");
+    });
+  }
+
+  if (modalCopyEmailBtn) {
+    modalCopyEmailBtn.addEventListener("click", () => {
+      copyText(currentModalEmail, "이메일이 복사되었습니다.");
     });
   }
 
@@ -533,6 +663,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  updateFavoriteOnlyButton();
   renderCounts();
   renderWeeklyLecture();
   renderRecentNotices();
