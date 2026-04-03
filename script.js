@@ -10,6 +10,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const departmentFilterButtons = document.querySelectorAll(".filter-chip");
   let activeDepartmentFilter = "전체";
 
+  const memberModal = document.getElementById("memberModal");
+  const memberModalCloseBtn = document.getElementById("memberModalCloseBtn");
+  const modalMemberName = document.getElementById("modalMemberName");
+  const modalMemberCompany = document.getElementById("modalMemberCompany");
+  const modalMemberPosition = document.getElementById("modalMemberPosition");
+  const modalMemberType = document.getElementById("modalMemberType");
+  const modalMemberField = document.getElementById("modalMemberField");
+  const modalMemberDepartment = document.getElementById("modalMemberDepartment");
+  const modalMemberId = document.getElementById("modalMemberId");
+  const modalMemberPhone = document.getElementById("modalMemberPhone");
+  const modalMemberEmail = document.getElementById("modalMemberEmail");
+  const modalMemberIntro = document.getElementById("modalMemberIntro");
+  const modalMemberPhoto = document.getElementById("modalMemberPhoto");
+  const modalMemberPhotoFallback = document.getElementById("modalMemberPhotoFallback");
+
   const noticeList = document.getElementById("noticeList");
   const curriculumList = document.getElementById("curriculumList");
   const galleryList = document.getElementById("galleryList");
@@ -50,6 +65,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const month = Number(match[1]);
     const day = Number(match[2]);
     return new Date(2026, month - 1, day);
+  }
+
+  function getMemberPhotoSrc(member) {
+    return `./${encodeURIComponent(member.name)}.jpg`;
+  }
+
+  function getInitialText(name) {
+    if (!name) return "?";
+    return String(name).trim().charAt(0);
   }
 
   function switchPage(pageId) {
@@ -173,21 +197,39 @@ document.addEventListener("DOMContentLoaded", () => {
         ? `<span class="member-chip">${member.department}</span>`
         : "";
 
+      const photoSrc = getMemberPhotoSrc(member);
+      const initialText = getInitialText(member.name);
+
       const card = document.createElement("div");
       card.className = "member-card";
+      card.dataset.memberId = member.id;
       card.innerHTML = `
-        <div class="member-top">
-          <div>
-            <div class="member-name">${member.name}</div>
-            <div class="member-company">${member.company}</div>
+        <div class="member-card-header">
+          <div class="member-thumb-wrap">
+            <img
+              class="member-thumb"
+              src="${photoSrc}"
+              alt="${member.name}"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div class="member-thumb-fallback" style="display:none;">${initialText}</div>
           </div>
-          <div class="member-badge">${member.position}</div>
-        </div>
 
-        <div class="member-meta-chips">
-          ${memberTypeChip}
-          ${fieldChip}
-          ${departmentChip}
+          <div style="flex:1;">
+            <div class="member-top">
+              <div>
+                <div class="member-name">${member.name}</div>
+                <div class="member-company">${member.company}</div>
+              </div>
+              <div class="member-badge">${member.position}</div>
+            </div>
+
+            <div class="member-meta-chips">
+              ${memberTypeChip}
+              ${fieldChip}
+              ${departmentChip}
+            </div>
+          </div>
         </div>
 
         <div class="member-info">
@@ -203,14 +245,53 @@ document.addEventListener("DOMContentLoaded", () => {
             <span class="info-label">이메일</span>
             <span>${member.email || "-"}</span>
           </div>
-          <div class="info-row">
-            <span class="info-label">소개</span>
-            <span>${member.intro || "-"}</span>
-          </div>
         </div>
       `;
       memberList.appendChild(card);
     });
+  }
+
+  function openMemberModal(memberId) {
+    const member = members.find((item) => item.id === memberId);
+    if (!member || !memberModal) return;
+
+    modalMemberName.textContent = member.name || "-";
+    modalMemberCompany.textContent = member.company || "-";
+    modalMemberPosition.textContent = member.position || "-";
+    modalMemberType.textContent = member.memberType || "회원 구분 없음";
+    modalMemberField.textContent = member.field || "분야 미입력";
+    modalMemberDepartment.textContent = member.department || "분과 미입력";
+    modalMemberId.textContent = member.id || "-";
+    modalMemberPhone.textContent = member.phone || "-";
+    modalMemberEmail.textContent = member.email || "-";
+    modalMemberIntro.textContent = member.intro || "등록된 소개가 없습니다.";
+
+    const photoSrc = getMemberPhotoSrc(member);
+    modalMemberPhoto.classList.add("hidden");
+    modalMemberPhotoFallback.classList.remove("hidden");
+    modalMemberPhotoFallback.textContent = getInitialText(member.name);
+
+    modalMemberPhoto.onload = () => {
+      modalMemberPhoto.classList.remove("hidden");
+      modalMemberPhotoFallback.classList.add("hidden");
+    };
+
+    modalMemberPhoto.onerror = () => {
+      modalMemberPhoto.classList.add("hidden");
+      modalMemberPhotoFallback.classList.remove("hidden");
+    };
+
+    modalMemberPhoto.src = photoSrc;
+    modalMemberPhoto.alt = member.name || "원우 사진";
+
+    memberModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeMemberModal() {
+    if (!memberModal) return;
+    memberModal.classList.add("hidden");
+    document.body.style.overflow = "";
   }
 
   function renderNotices() {
@@ -305,9 +386,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return "status-early-leave";
       case "결석":
         return "status-absent";
+      case "미입력":
       default:
         return "status-empty";
     }
+  }
+
+  function calculateRate(summary) {
+    const total = summary.present + summary.late + summary.earlyLeave + summary.absent;
+    if (!total) return 0;
+    const attended = summary.present + summary.late + summary.earlyLeave;
+    return Number(((attended / total) * 100).toFixed(1));
   }
 
   function resetAttendanceView() {
@@ -327,20 +416,25 @@ document.addEventListener("DOMContentLoaded", () => {
     attendanceNotFound.classList.add("hidden");
     attendanceResult.classList.remove("hidden");
 
+    const summary = person.summary || { present: 0, late: 0, earlyLeave: 0, absent: 0 };
+    const rate = typeof person.attendanceRate === "number"
+      ? person.attendanceRate
+      : calculateRate(summary);
+
     attendanceResultName.textContent = person.name;
     attendanceResultId.textContent = `ID ${person.id}`;
     attendanceResultMeta.textContent =
       `${person.company} · ${person.position}${person.department ? ` · ${person.department}` : ""}`;
-    attendanceResultRate.textContent = `${person.attendanceRate}%`;
+    attendanceResultRate.textContent = `${rate}%`;
 
-    attendancePresentCount.textContent = `${person.summary.present}회`;
-    attendanceLateCount.textContent = `${person.summary.late}회`;
-    attendanceEarlyLeaveCount.textContent = `${person.summary.earlyLeave}회`;
-    attendanceAbsentCount.textContent = `${person.summary.absent}회`;
+    attendancePresentCount.textContent = `${summary.present}회`;
+    attendanceLateCount.textContent = `${summary.late}회`;
+    attendanceEarlyLeaveCount.textContent = `${summary.earlyLeave}회`;
+    attendanceAbsentCount.textContent = `${summary.absent}회`;
 
     attendanceWeeklyList.innerHTML = "";
 
-    person.weekly.forEach((item) => {
+    (person.weekly || []).forEach((item) => {
       const row = document.createElement("div");
       row.className = "attendance-weekly-item";
       row.innerHTML = `
@@ -399,6 +493,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
       renderMembers(memberSearch ? memberSearch.value : "");
     });
+  });
+
+  if (memberList) {
+    memberList.addEventListener("click", (e) => {
+      const card = e.target.closest(".member-card");
+      if (!card) return;
+      openMemberModal(card.dataset.memberId);
+    });
+  }
+
+  if (memberModalCloseBtn) {
+    memberModalCloseBtn.addEventListener("click", closeMemberModal);
+  }
+
+  if (memberModal) {
+    memberModal.addEventListener("click", (e) => {
+      if (e.target === memberModal) {
+        closeMemberModal();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeMemberModal();
+    }
   });
 
   if (attendanceSearchBtn) {
