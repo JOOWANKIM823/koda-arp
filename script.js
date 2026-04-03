@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalMemberIntro = document.getElementById("modalMemberIntro");
 
   const modalCallBtn = document.getElementById("modalCallBtn");
+  const modalEmailBtn = document.getElementById("modalEmailBtn");
   const modalCopyPhoneBtn = document.getElementById("modalCopyPhoneBtn");
-  const modalCopyEmailBtn = document.getElementById("modalCopyEmailBtn");
   const contactToast = document.getElementById("contactToast");
 
   const noticeList = document.getElementById("noticeList");
@@ -126,6 +126,13 @@ document.addEventListener("DOMContentLoaded", () => {
     button.classList.toggle("disabled", !enabled);
   }
 
+  function setLinkEnabled(link, href, enabled) {
+    if (!link) return;
+    link.href = enabled ? href : "#";
+    link.setAttribute("aria-disabled", enabled ? "false" : "true");
+    link.classList.toggle("disabled", !enabled);
+  }
+
   function showToast(message) {
     if (!contactToast) return;
     contactToast.textContent = message;
@@ -164,14 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       document.body.removeChild(textarea);
     }
-  }
-
-  function tryCall(phone) {
-    if (!phone) {
-      showToast("전화번호가 없습니다.");
-      return;
-    }
-    window.location.href = `tel:${phone}`;
   }
 
   function switchPage(pageId) {
@@ -372,9 +371,9 @@ document.addEventListener("DOMContentLoaded", () => {
     currentModalPhone = sanitizePhone(member.phone);
     currentModalEmail = normalizeEmail(member.email);
 
-    setButtonEnabled(modalCallBtn, !!currentModalPhone);
+    setLinkEnabled(modalCallBtn, `tel:${currentModalPhone}`, !!currentModalPhone);
+    setLinkEnabled(modalEmailBtn, `mailto:${currentModalEmail}`, !!currentModalEmail);
     setButtonEnabled(modalCopyPhoneBtn, !!currentModalPhone);
-    setButtonEnabled(modalCopyEmailBtn, !!currentModalEmail);
 
     if (contactToast) {
       contactToast.classList.add("hidden");
@@ -615,21 +614,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (modalCallBtn) {
-    modalCallBtn.addEventListener("click", () => {
-      tryCall(currentModalPhone);
-    });
-  }
-
   if (modalCopyPhoneBtn) {
     modalCopyPhoneBtn.addEventListener("click", () => {
       copyText(currentModalPhone, "전화번호가 복사되었습니다.");
-    });
-  }
-
-  if (modalCopyEmailBtn) {
-    modalCopyEmailBtn.addEventListener("click", () => {
-      copyText(currentModalEmail, "이메일이 복사되었습니다.");
     });
   }
 
